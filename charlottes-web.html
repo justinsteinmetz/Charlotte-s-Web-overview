@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charlotte's Web — Interactive Lesson</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #f5f0e4;
+  --parchment: #ede5cf;
+  --barn: #8b2c2c;
+  --barn-dark: #6b1f1f;
+  --meadow: #4a7c59;
+  --straw: #c9a84c;
+  --ink: #2c2416;
+  --ink-light: #4a3f2f;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--cream); color: var(--ink); font-family: 'Lora', Georgia, serif; min-height: 100vh; }
+
+header {
+  background: var(--barn);
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(0,0,0,0.05) 30px,rgba(0,0,0,0.05) 31px),
+    repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(0,0,0,0.03) 30px,rgba(0,0,0,0.03) 31px);
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:4px; background:linear-gradient(to right, var(--straw), #e8c96a, var(--straw)); }
+.web-svg { position:absolute; top:0; right:30px; width:130px; height:130px; opacity:0.15; }
+header h1 { font-family:'Playfair Display',serif; font-size:clamp(2.4rem,6vw,4rem); color:var(--cream); font-style:italic; text-shadow:2px 4px 12px rgba(0,0,0,0.35); line-height:1.1; }
+header p.sub { color:rgba(245,240,228,0.72); font-size:0.92rem; margin-top:0.6rem; letter-spacing:0.14em; text-transform:uppercase; }
+
+nav { background:var(--barn-dark); display:flex; flex-wrap:wrap; justify-content:center; border-bottom:3px solid var(--straw); position:sticky; top:0; z-index:200; box-shadow:0 3px 14px rgba(44,36,22,0.22); }
+nav button { background:none; border:none; color:rgba(245,240,228,0.7); font-family:'Lora',serif; font-size:0.8rem; padding:0.8rem 1rem; cursor:pointer; letter-spacing:0.07em; transition:all 0.2s; border-bottom:3px solid transparent; margin-bottom:-3px; white-space:nowrap; }
+nav button:hover, nav button.active { color:var(--straw); border-bottom-color:var(--straw); background:rgba(255,255,255,0.06); }
+
+main { max-width:920px; margin:0 auto; padding:2.5rem 1.5rem 5rem; }
+.section { display:none; animation:fadeUp 0.35s ease; }
+.section.active { display:block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.sec-title { font-family:'Playfair Display',serif; font-size:2rem; color:var(--barn); font-style:italic; margin-bottom:0.3rem; }
+.sec-rule { height:2px; background:linear-gradient(to right, var(--straw) 0%, transparent 100%); margin-bottom:2rem; }
+
+.card { background:#faf7f1; border:1px solid rgba(44,36,22,0.1); border-radius:5px; padding:1.4rem 1.6rem; margin-bottom:1.2rem; box-shadow:0 2px 8px rgba(44,36,22,0.06); position:relative; }
+.card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:5px 0 0 5px; background:var(--meadow); }
+.card.red::before { background:var(--barn); }
+.card.straw::before { background:var(--straw); }
+.card.grey::before { background:#999; }
+.card h3 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:0.5rem; }
+.card p, .card li { font-size:0.94rem; line-height:1.75; color:var(--ink-light); }
+.card ul { padding-left:1.3rem; }
+.card li { margin-bottom:0.3rem; }
+
+.chapter { border:1px solid rgba(44,36,22,0.1); border-radius:5px; margin-bottom:0.7rem; overflow:hidden; }
+.chapter-head { background:var(--parchment); padding:0.95rem 1.4rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background 0.2s; user-select:none; }
+.chapter-head:hover { background:#e5dcc4; }
+.chapter-head .ch-label { font-family:'Playfair Display',serif; font-size:1rem; font-style:italic; }
+.chapter-head .ch-num { font-size:0.78rem; color:var(--barn); letter-spacing:0.1em; font-weight:600; text-transform:uppercase; }
+.chapter-head .ch-arrow { font-size:0.8rem; color:var(--barn); transition:transform 0.25s; }
+.chapter-body { display:none; padding:1.2rem 1.6rem; background:#faf7f1; border-top:1px solid rgba(44,36,22,0.08); }
+.chapter-body.open { display:block; }
+.chapter-body p { font-size:0.93rem; line-height:1.75; color:var(--ink-light); margin-bottom:0.8rem; }
+.chapter-body .key-moment { background:rgba(74,124,89,0.1); border-left:3px solid var(--meadow); padding:0.7rem 1rem; border-radius:0 4px 4px 0; font-size:0.88rem; font-style:italic; color:var(--meadow); margin-bottom:0.8rem; }
+
+.reveal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+.reveal-card { background:var(--barn); border-radius:6px; padding:1.2rem; cursor:pointer; text-align:center; transition:transform 0.2s, box-shadow 0.2s; min-height:110px; display:flex; align-items:center; justify-content:center; }
+.reveal-card:hover { transform:translateY(-3px); box-shadow:0 6px 18px rgba(44,36,22,0.18); }
+.reveal-card .front { font-family:'Playfair Display',serif; color:var(--straw); font-size:1rem; font-style:italic; }
+.reveal-card .back { display:none; font-size:0.87rem; color:var(--cream); line-height:1.6; }
+.reveal-card.revealed .front { display:none; }
+.reveal-card.revealed .back { display:block; }
+.reveal-card.revealed { background:var(--meadow); cursor:default; transform:none; }
+
+.quiz-block { background:#faf7f1; border:1px solid rgba(44,36,22,0.1); border-radius:6px; padding:1.5rem 1.6rem; margin-bottom:1.4rem; }
+.quiz-block .q-text { font-family:'Playfair Display',serif; font-size:1.05rem; margin-bottom:1rem; font-style:italic; }
+.q-options { display:flex; flex-direction:column; gap:0.5rem; }
+.q-option { background:var(--parchment); border:1.5px solid rgba(44,36,22,0.12); border-radius:4px; padding:0.65rem 1rem; cursor:pointer; font-size:0.9rem; transition:all 0.18s; text-align:left; font-family:'Lora',serif; color:var(--ink); }
+.q-option:hover:not(.locked) { background:#e5dcc4; border-color:var(--straw); }
+.q-option.correct { background:rgba(74,124,89,0.15); border-color:var(--meadow); color:var(--meadow); }
+.q-option.wrong { background:rgba(139,44,44,0.12); border-color:var(--barn); color:var(--barn); }
+.q-feedback { margin-top:0.8rem; font-size:0.88rem; font-style:italic; padding:0.6rem 0.9rem; border-radius:4px; display:none; }
+.q-feedback.show { display:block; }
+.q-feedback.correct { background:rgba(74,124,89,0.12); color:var(--meadow); }
+.q-feedback.wrong { background:rgba(139,44,44,0.1); color:var(--barn); }
+
+.discussion-prompt { background:linear-gradient(135deg,#faf7f1,var(--parchment)); border:1px solid rgba(44,36,22,0.1); border-radius:6px; padding:1.4rem 1.6rem; margin-bottom:1.2rem; position:relative; }
+.discussion-prompt::before { content:'"'; position:absolute; top:-0.3rem; left:0.9rem; font-size:4rem; color:var(--straw); opacity:0.4; font-family:'Playfair Display',serif; line-height:1; }
+.discussion-prompt p { font-size:1rem; line-height:1.7; padding-left:0.5rem; color:var(--ink); }
+.discussion-prompt .prompt-tag { display:inline-block; background:var(--straw); color:white; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.2rem 0.6rem; border-radius:3px; margin-bottom:0.6rem; }
+
+.match-container { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem; }
+.match-col h4 { font-family:'Playfair Display',serif; font-size:0.95rem; color:var(--barn); margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.08em; }
+.draggable { background:var(--barn); color:var(--cream); padding:0.65rem 0.9rem; border-radius:4px; margin-bottom:0.5rem; cursor:grab; font-size:0.88rem; transition:opacity 0.2s, transform 0.15s; user-select:none; }
+.draggable:active { cursor:grabbing; transform:scale(1.03); }
+.draggable.dragging { opacity:0.4; }
+.drop-zone { min-height:52px; border:2px dashed rgba(44,36,22,0.2); border-radius:4px; padding:0.5rem 0.8rem; margin-bottom:0.5rem; font-size:0.85rem; color:var(--ink-light); display:flex; align-items:center; transition:background 0.2s, border-color 0.2s; }
+.drop-zone.drag-over { background:rgba(74,124,89,0.08); border-color:var(--meadow); }
+.drop-zone.matched-correct { background:rgba(74,124,89,0.12); border-color:var(--meadow); border-style:solid; }
+.drop-zone.matched-wrong { background:rgba(139,44,44,0.1); border-color:var(--barn); border-style:solid; }
+.drop-zone .zone-label { font-style:italic; color:rgba(44,36,22,0.4); font-size:0.82rem; }
+.match-btn { background:var(--barn); color:var(--cream); border:none; border-radius:4px; padding:0.65rem 1.4rem; font-family:'Lora',serif; font-size:0.9rem; cursor:pointer; transition:background 0.2s; margin-right:0.6rem; margin-bottom:0.6rem; }
+.match-btn:hover { background:var(--barn-dark); }
+.reset-btn { background:#888; color:white; border:none; border-radius:4px; padding:0.65rem 1.4rem; font-family:'Lora',serif; font-size:0.9rem; cursor:pointer; margin-bottom:0.6rem; }
+.reset-btn:hover { background:#666; }
+.match-result { margin-top:0.8rem; font-size:0.9rem; font-style:italic; color:var(--ink-light); }
+
+.pres-task { background:var(--barn); color:var(--cream); border-radius:6px; padding:1.6rem 1.8rem; margin-bottom:1.2rem; }
+.pres-task h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--straw); margin-bottom:0.7rem; }
+.pres-task p, .pres-task li { font-size:0.93rem; line-height:1.75; color:rgba(245,240,228,0.88); }
+.pres-task ul { padding-left:1.3rem; }
+.pres-task li { margin-bottom:0.4rem; }
+
+.gw-note { background:var(--parchment); border:1px dashed rgba(44,36,22,0.2); border-radius:5px; padding:1rem 1.3rem; font-size:0.84rem; color:var(--ink-light); font-style:italic; margin-bottom:1.5rem; text-align:center; }
+.illustration { background:var(--parchment); border:2px solid rgba(44,36,22,0.12); border-radius:6px; padding:2rem; text-align:center; margin:1.2rem 0; font-style:italic; color:rgba(44,36,22,0.4); font-size:0.88rem; }
+.illustration .ill-title { font-family:'Playfair Display',serif; font-size:1rem; color:var(--ink-light); margin-bottom:0.3rem; font-style:italic; }
+
+@media (max-width:600px) { .match-container { grid-template-columns:1fr; } .reveal-grid { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="web-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="45" stroke="white" stroke-width="0.8"/>
+    <circle cx="50" cy="50" r="30" stroke="white" stroke-width="0.8"/>
+    <circle cx="50" cy="50" r="15" stroke="white" stroke-width="0.8"/>
+    <line x1="50" y1="5" x2="50" y2="95" stroke="white" stroke-width="0.6"/>
+    <line x1="5" y1="50" x2="95" y2="50" stroke="white" stroke-width="0.6"/>
+    <line x1="18" y1="18" x2="82" y2="82" stroke="white" stroke-width="0.6"/>
+    <line x1="82" y1="18" x2="18" y2="82" stroke="white" stroke-width="0.6"/>
+    <line x1="5" y1="30" x2="95" y2="70" stroke="white" stroke-width="0.4"/>
+    <line x1="5" y1="70" x2="95" y2="30" stroke="white" stroke-width="0.4"/>
+    <circle cx="50" cy="50" r="3" fill="white"/>
+  </svg>
+  <h1>Charlotte's Web</h1>
+  <p class="sub">E.B. White &nbsp;·&nbsp; Illustrated by Garth Williams &nbsp;·&nbsp; An Interactive Lesson</p>
+</header>
+
+<nav id="main-nav">
+  <button class="active" onclick="showSection('overview')">Overview</button>
+  <button onclick="showSection('part1')">Part 1: The Farm</button>
+  <button onclick="showSection('part2')">Part 2: The Fair</button>
+  <button onclick="showSection('part3')">Part 3: Charlotte's Gift</button>
+  <button onclick="showSection('themes')">Themes</button>
+  <button onclick="showSection('characters')">Characters</button>
+  <button onclick="showSection('quiz')">Quiz</button>
+  <button onclick="showSection('discussion')">Discussion</button>
+  <button onclick="showSection('match')">Matching</button>
+  <button onclick="showSection('presentation')">Your Presentation</button>
+</nav>
+
+<main>
+
+<!-- OVERVIEW -->
+<section id="overview" class="section active">
+  <h2 class="sec-title">Welcome to the barn.</h2>
+  <div class="sec-rule"></div>
+
+  <div class="gw-note">
+    ✦ All illustration notes in this lesson refer to artwork by <strong>Garth Williams</strong> (1912–1996), whose pencil drawings first brought Wilbur, Charlotte, and the Zuckerman farm to life in 1952.
+  </div>
+
+  <div class="illustration">
+    <div class="ill-title">Garth Williams — Wilbur at the barn door</div>
+    <em>A small, round pig standing in the doorway of a timber barn. Morning light, loose straw, the smell of the farm just waking up.</em>
+  </div>
+
+  <div class="card">
+    <h3>About the Book</h3>
+    <p><em>Charlotte's Web</em> was written by E.B. White and published in 1952. It is set on a farm in Maine, USA. It tells the story of a pig named Wilbur who is saved from slaughter — first by a little girl named Fern, and then by an extraordinary spider named Charlotte A. Cavatica.</p>
+  </div>
+
+  <div class="card red">
+    <h3>The Central Question</h3>
+    <p>The whole novel asks one quiet but powerful question: <strong>What does it mean to have a true friend?</strong> Charlotte gives Wilbur everything — her words, her energy, and finally her life. What does that cost her? What does it mean?</p>
+  </div>
+
+  <div class="card straw">
+    <h3>What We're Doing Today</h3>
+    <ul>
+      <li>Going through the whole story — plot, characters, key moments</li>
+      <li>Exploring the big themes: friendship, death, language, nature</li>
+      <li>Testing your understanding with quizzes and matching activities</li>
+      <li>Discussing the parts that matter most</li>
+      <li>Preparing for your class presentations</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>How to Use This Lesson</h3>
+    <ul>
+      <li>Use the <strong>navigation bar</strong> at the top to move between sections</li>
+      <li>Click on chapter titles to expand them and read what happens</li>
+      <li>Click the <strong>dark cards</strong> in Themes to reveal ideas</li>
+      <li>Answer quiz questions — you'll get instant feedback</li>
+      <li>Drag and drop in the Matching section</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PART 1 -->
+<section id="part1" class="section">
+  <h2 class="sec-title">Part One: The Farm</h2>
+  <div class="sec-rule"></div>
+  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Chapters 1–7 — Wilbur arrives. He finds the barn lonely. Then he finds Charlotte.</p>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 1 &nbsp;</span><span class="ch-label">Before Breakfast</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>The novel opens before dawn. Fern Arable, age eight, hears that her father is going to kill the runt of a new litter of pigs. She runs out in her pyjamas and confronts him. <em>"If I had been very small at birth, would you have killed me?"</em> Her father has no answer. He hands her the piglet.</p>
+      <div class="key-moment">✦ Key moment: Fern's argument is pure moral logic. She sees no difference between the value of a pig's life and a human's. This is one of the quietly radical moments in the book.</div>
+      <p>She names the pig Wilbur and raises him like a baby — bottle-feeding him, pushing him in a pram. For five weeks, he is entirely hers.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 2–3 &nbsp;</span><span class="ch-label">Wilbur Goes to the Farm / Escape</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>When Wilbur is five weeks old, he is sold to Fern's uncle, Homer Zuckerman, whose farm is nearby. Fern can still visit, but Wilbur now lives in a barn. He is bewildered and lonely.</p>
+      <p>He briefly escapes from his pen — causing chaos around the farmyard — before being lured back with a bucket of slop. His "freedom" is funny and sad. He doesn't know what to do with it.</p>
+      <div class="key-moment">✦ Key moment: Wilbur's escape shows how domesticated he already is. He is not wild. He needs shelter, food — and company.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 4–5 &nbsp;</span><span class="ch-label">Loneliness / Charlotte</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>Wilbur asks the farm animals to play with him — the goose is too busy with eggs; the lamb refuses. <em>"I'm less than two months old and I'm tired of living."</em> He is genuinely miserable.</p>
+      <div class="illustration">
+        <div class="ill-title">Garth Williams — Charlotte in her web</div>
+        <em>A grey spider at the centre of her web in the upper corner of the barn doorway. The web catches a thin slant of morning light. Wilbur is asleep below.</em>
+      </div>
+      <p>Then a small voice: <em>"Do you want a friend, Wilbur? I'll be your friend. I've watched you all day and I like you."</em> It is Charlotte A. Cavatica — a large grey spider in the top of the doorway. Wilbur is horrified at first by what she eats. But friendship begins anyway.</p>
+      <div class="key-moment">✦ Key moment: Charlotte offers friendship freely, without conditions. She doesn't ask Wilbur to be different. This is the moral centre of the novel.</div>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 6–7 &nbsp;</span><span class="ch-label">Summer Days / Bad News</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>Summer settles over the farm. Fern visits and sits quietly in the barn, listening to the animals as if she can almost understand them. Then the old sheep — always the voice of hard truth — tells Wilbur what no one else will: come Christmas, Mr Zuckerman is going to kill and eat him.</p>
+      <p>Wilbur panics. He cries and runs around in the mud. Charlotte calms him: <em>"I am going to save your life."</em> She doesn't yet know how. She just promises.</p>
+      <div class="key-moment">✦ Key moment: Charlotte makes an enormous promise without a plan. She commits to Wilbur before she has any idea what it will cost her. That is what makes her extraordinary.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--barn); margin-bottom:1rem;">✦ Check Your Understanding — Part 1</h3>
+    <div class="quiz-block">
+      <div class="q-text">1. Why does Fern's father decide not to kill the piglet?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">He wanted to sell it for money.</button>
+        <button class="q-option" onclick="checkAnswer(this,'correct')">Fern's moral argument moved him.</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">The pig was not actually the runt.</button>
+      </div>
+      <div class="q-feedback">Fern asks if her father would have killed <em>her</em> if she'd been born small. He has no answer to that — and hands the pig over.</div>
+    </div>
+    <div class="quiz-block">
+      <div class="q-text">2. What is Charlotte's full name?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Charlotte A. Cobweb</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Charlotte E. Spinner</button>
+        <button class="q-option" onclick="checkAnswer(this,'correct')">Charlotte A. Cavatica</button>
+      </div>
+      <div class="q-feedback"><em>Araneus cavaticus</em> is the real species name for the barn spider. E.B. White researched this carefully.</div>
+    </div>
+    <div class="quiz-block">
+      <div class="q-text">3. Who tells Wilbur he will be slaughtered at Christmas?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Charlotte</button>
+        <button class="q-option" onclick="checkAnswer(this,'correct')">The old sheep</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Fern</button>
+      </div>
+      <div class="q-feedback">The sheep is the novel's realist — she says hard things plainly, without cruelty, because she thinks Wilbur deserves to know.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PART 2 -->
+<section id="part2" class="section">
+  <h2 class="sec-title">Part Two: The Fair</h2>
+  <div class="sec-rule"></div>
+  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Chapters 8–19 — Charlotte writes. The world notices. The county fair changes everything.</p>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 8–11 &nbsp;</span><span class="ch-label">Charlotte's Plan / SOME PIG</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>Charlotte thinks carefully. Her plan is this: she will write words in her web — words that describe Wilbur — and make the humans believe he is something extraordinary. Not because he is. But because they will be <em>told</em> he is.</p>
+      <p>One morning, Mr Zuckerman finds two words above the pig pen: <strong>SOME PIG.</strong> He is stunned. Word spreads. People come from miles around. No one questions it — they simply believe.</p>
+      <div class="illustration">
+        <div class="ill-title">Garth Williams — SOME PIG</div>
+        <em>Mr and Mrs Zuckerman staring up at the web with open mouths. Wilbur sits quietly below, unaware of the fuss. Charlotte is barely visible in the top corner.</em>
+      </div>
+      <div class="key-moment">✦ Key moment: Wilbur hasn't changed at all. The <em>words</em> change how people see him. Charlotte understands the power of language before Wilbur has any idea it's being used.</div>
+      <p>Templeton the rat — selfish, cynical, but useful — is persuaded by Charlotte to collect words from old magazines and newspapers.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 12–16 &nbsp;</span><span class="ch-label">TERRIFIC / RADIANT / HUMBLE</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>Charlotte weaves more words: <strong>TERRIFIC</strong>. Then <strong>RADIANT</strong>. Each time, the humans are amazed. Each time, Wilbur is a little safer. Each time, Charlotte grows a little more tired.</p>
+      <div class="key-moment">✦ The choice of <strong>HUMBLE</strong> is quietly beautiful. Charlotte says Wilbur is not proud — but it is Charlotte herself who is humble. She works in the dark, takes no credit, asks for nothing.</div>
+      <p>The Zuckermans decide to enter Wilbur in the county fair. Charlotte begins planning what she'll weave there — and privately knows she is weakening.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 17–19 &nbsp;</span><span class="ch-label">The County Fair</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>Wilbur is taken to the county fair. Charlotte comes too, though the journey is exhausting her. At the fair, he faces a rival — Uncle, a magnificent pig from another farm — who threatens to take the prize and make Wilbur seem ordinary.</p>
+      <div class="illustration">
+        <div class="ill-title">Garth Williams — The fair at night</div>
+        <em>Fairground lights on strings between the animal pens. Wilbur's crate in a long row. Charlotte barely visible above him, spinning in the corner of his pen.</em>
+      </div>
+      <p>Charlotte weaves her final word — <strong>HUMBLE</strong> — and on the same night, quietly completes something else: her egg sac. 514 eggs, in a papery grey cocoon, hidden in the corner of Wilbur's pen.</p>
+      <div class="key-moment">✦ Key moment: As Charlotte creates life, she is preparing for her own death. The two things happen side by side — which is exactly how nature works.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--barn); margin-bottom:1rem;">✦ Check Your Understanding — Part 2</h3>
+    <div class="quiz-block">
+      <div class="q-text">4. What is Charlotte's plan to save Wilbur?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">She asks Fern to buy him back.</button>
+        <button class="q-option" onclick="checkAnswer(this,'correct')">She writes words in her web to make the humans think he is special.</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">She helps Wilbur escape from the farm.</button>
+      </div>
+      <div class="q-feedback">Charlotte understands that humans can be persuaded by words and spectacle — even when the thing in front of them hasn't changed at all.</div>
+    </div>
+    <div class="quiz-block">
+      <div class="q-text">5. What does Templeton help Charlotte with?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'correct')">He brings word-clippings from magazines and newspapers.</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">He carries secret messages between the farm and the fair.</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">He frightens the judges so Wilbur wins.</button>
+      </div>
+      <div class="q-feedback">Templeton helps — but only because there's something in it for him. That is the difference between an ally and a friend.</div>
+    </div>
+    <div class="quiz-block">
+      <div class="q-text">6. In what order does Charlotte weave her words?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Radiant → Terrific → Some Pig → Humble</button>
+        <button class="q-option" onclick="checkAnswer(this,'correct')">Some Pig → Terrific → Radiant → Humble</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Humble → Some Pig → Terrific → Radiant</button>
+      </div>
+      <div class="q-feedback">Each word builds Wilbur's reputation one step further — a deliberate, cumulative campaign.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PART 3 -->
+<section id="part3" class="section">
+  <h2 class="sec-title">Part Three: Charlotte's Gift</h2>
+  <div class="sec-rule"></div>
+  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Chapters 20–22 — Wilbur wins. Charlotte dies. Spring returns.</p>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 20–21 &nbsp;</span><span class="ch-label">The Last Day / Charlotte's Death</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>Wilbur wins a special award at the fair — not the top prize, but enough. He is safe. The Zuckermans will not kill him. When Wilbur goes to thank Charlotte, he finds her barely moving. She tells him plainly: she is dying. She will not be going home.</p>
+      <div class="illustration">
+        <div class="ill-title">Garth Williams — Charlotte alone</div>
+        <em>Charlotte small and still in the far corner of her web. The pen below empty. The fairground quieter now. She is entirely alone — except for Wilbur, watching from his crate.</em>
+      </div>
+      <div class="key-moment">✦ E.B. White does not soften this. Charlotte dies at the fairground, alone. But she dies having done what she set out to do — and having left her egg sac behind.</div>
+      <p>Wilbur asks Templeton to carry the egg sac carefully back to the farm. Templeton agrees — after being bribed. Wilbur watches over the sac all winter long.</p>
+    </div>
+  </div>
+
+  <div class="chapter">
+    <div class="chapter-head" onclick="toggleChapter(this)">
+      <div><span class="ch-num">Ch. 22 &nbsp;</span><span class="ch-label">Spring / A Warm Wind</span></div>
+      <span class="ch-arrow">▾</span>
+    </div>
+    <div class="chapter-body">
+      <p>Spring returns to the Zuckerman farm. The egg sac opens. Hundreds of tiny spiders emerge — and most of them float away on silk threads to start their own lives. Wilbur is heartbroken all over again.</p>
+      <p>Then three small spiders decide to stay. They are Charlotte's daughters: <strong>Joy</strong>, <strong>Aranea</strong>, and <strong>Nellie</strong>. Wilbur loves them — but he never forgets Charlotte. No one takes her place.</p>
+      <div class="key-moment">✦ The novel ends: <em>"It is not often that someone comes along who is a true friend and a good writer. Charlotte was both."</em> — the whole book in two sentences.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--barn); margin-bottom:1rem;">✦ Check Your Understanding — Part 3</h3>
+    <div class="quiz-block">
+      <div class="q-text">7. How many eggs are in Charlotte's egg sac?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">114</button>
+        <button class="q-option" onclick="checkAnswer(this,'correct')">514</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">214</button>
+      </div>
+      <div class="q-feedback">514 eggs — Charlotte's final, enormous act. Most of the babies will fly away, but a few stay at the farm with Wilbur.</div>
+    </div>
+    <div class="quiz-block">
+      <div class="q-text">8. What are the names of the three spiders who stay at the farm?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'correct')">Joy, Aranea, and Nellie</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Hope, Clara, and Grace</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">Faith, Willa, and Rose</button>
+      </div>
+      <div class="q-feedback">Joy, Aranea, and Nellie — Charlotte's legacy, literally living on in the next generation.</div>
+    </div>
+    <div class="quiz-block">
+      <div class="q-text">9. At the end of the novel, what does Wilbur feel about Charlotte?</div>
+      <div class="q-options">
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">He gradually forgets her as life on the farm continues.</button>
+        <button class="q-option" onclick="checkAnswer(this,'wrong')">He is quietly angry that she couldn't come home.</button>
+        <button class="q-option" onclick="checkAnswer(this,'correct')">He loves and remembers her forever — no one ever takes her place.</button>
+      </div>
+      <div class="q-feedback">White is clear about this: Wilbur loves the new spiders, but Charlotte is irreplaceable. That is what the book says friendship truly means.</div>
+    </div>
+  </div>
+</section>
+
+<!-- THEMES -->
+<section id="themes" class="section">
+  <h2 class="sec-title">The Big Themes</h2>
+  <div class="sec-rule"></div>
+  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Click each card to reveal what it means in the novel.</p>
+
+  <div class="reveal-grid">
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">Friendship</span>
+      <span class="back">Charlotte asks nothing of Wilbur. She gives everything — time, skill, finally her life — because she loves him. True friendship in this novel is selfless and costly.</span>
+    </div>
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">Death</span>
+      <span class="back">Charlotte's death is honest and unavoidable. White doesn't soften it — she dies alone, at the fairground. But her life had meaning. She saved Wilbur and left behind her children.</span>
+    </div>
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">The Power of Words</span>
+      <span class="back">Charlotte's words don't change Wilbur — they change how humans <em>see</em> him. Language shapes reality. TERRIFIC and HUMBLE give people a story to believe in, whether it's true or not.</span>
+    </div>
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">Nature's Cycles</span>
+      <span class="back">Birth, growth, death, renewal. Charlotte dies as her eggs hatch. Spring follows winter. The farm continues. White sees nature as beautiful — and completely unsentimental.</span>
+    </div>
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">Innocence vs. Reality</span>
+      <span class="back">Fern sees animals as equals. Adults see them as livestock. Wilbur has to learn that the world doesn't always protect you. Growing up means accepting that hard truth.</span>
+    </div>
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">Loyalty</span>
+      <span class="back">Charlotte is loyal even when it costs her everything. Compare Templeton — useful but never truly loyal. The novel asks: what is the difference between being <em>helpful</em> and being a <em>friend</em>?</span>
+    </div>
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">Humility</span>
+      <span class="back">Charlotte chooses HUMBLE for Wilbur. But it describes herself. She works alone, quietly, at night, while everyone else admires the pig. She never takes credit. That is real humility.</span>
+    </div>
+    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
+      <span class="front">Legacy</span>
+      <span class="back">Charlotte knows she is dying but keeps working. Her egg sac is her legacy — 514 lives she leaves behind. Does a life have meaning even if it ends? Charlotte's answer is yes.</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem;">
+    <h3>A Note on E.B. White's Writing</h3>
+    <p>White was a professional writer who co-authored <em>The Elements of Style</em>, still one of the most famous guides to writing in English. He chose every word in this novel carefully. The prose is simple on the surface but precise underneath. Notice how the barn description in Chapter 3 — smells, sounds, textures — makes you feel you are physically there. That is what craft looks like.</p>
+  </div>
+</section>
+
+<!-- CHARACTERS -->
+<section id="characters" class="section">
+  <h2 class="sec-title">The Characters</h2>
+  <div class="sec-rule"></div>
+
+  <div class="card red">
+    <h3>Charlotte A. Cavatica</h3>
+    <p>A large grey barn spider. Patient, intelligent, a gifted writer. She is practical about nature — she catches and eats flies and does not apologise for it — but entirely devoted to Wilbur. She sees his worth before anyone else does. She is the moral and emotional centre of the novel.</p>
+  </div>
+  <div class="card">
+    <h3>Wilbur</h3>
+    <p>Small, naive, sweet-natured. He is emotional and easily frightened — he cries when he hears about his fate, panics at the fair, misses Charlotte terribly. But he is loyal and genuinely good. He is saved not because he is extraordinary, but because he is loved.</p>
+  </div>
+  <div class="card straw">
+    <h3>Fern Arable</h3>
+    <p>The eight-year-old girl who saves Wilbur at birth. Morally fearless in Chapter 1. But she gradually grows up and away from the barn — by the fair she's interested in boys, not pigs. Her distancing from Wilbur is a quiet kind of loss too.</p>
+  </div>
+  <div class="card grey">
+    <h3>Templeton the Rat</h3>
+    <p>Selfish, gluttonous, and cynical — but essential. He helps only when there's something in it for him. White is honest: Templeton is not a villain, but he is not a friend. He is an opportunist. That is a different and real kind of character.</p>
+  </div>
+  <div class="card">
+    <h3>The Zuckermans and the Arables</h3>
+    <p>Ordinary farming people. Not cruel — just practical. They would have killed Wilbur without malice. Charlotte's web works on them because they <em>want</em> to believe in something extraordinary. That human need to believe is part of White's point.</p>
+  </div>
+</section>
+
+<!-- FULL QUIZ -->
+<section id="quiz" class="section">
+  <h2 class="sec-title">Full Novel Quiz</h2>
+  <div class="sec-rule"></div>
+  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">These questions cover the whole book. Click an answer to find out.</p>
+
+  <div class="quiz-block">
+    <div class="q-text">1. What kind of animal is Charlotte?</div>
+    <div class="q-options">
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">A moth</button>
+      <button class="q-option" onclick="checkAnswer(this,'correct')">A spider</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">A grasshopper</button>
+    </div>
+    <div class="q-feedback">Specifically a barn spider — <em>Araneus cavaticus</em>. E.B. White researched spiders carefully while writing the book.</div>
+  </div>
+
+  <div class="quiz-block">
+    <div class="q-text">2. Why is Wilbur almost killed at the very beginning?</div>
+    <div class="q-options">
+      <button class="q-option" onclick="checkAnswer(this,'correct')">He was born the runt of the litter.</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">He was sick and couldn't be treated.</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">There were too many pigs on the farm.</button>
+    </div>
+    <div class="q-feedback">Runts were often killed because they were expensive to raise with little return. Fern's argument stops this.</div>
+  </div>
+
+  <div class="quiz-block">
+    <div class="q-text">3. What does Charlotte's web say that causes the first sensation?</div>
+    <div class="q-options">
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">WONDERFUL</button>
+      <button class="q-option" onclick="checkAnswer(this,'correct')">SOME PIG</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">TERRIFIC</button>
+    </div>
+    <div class="q-feedback">Two simple words — but they transform how the whole community sees Wilbur overnight.</div>
+  </div>
+
+  <div class="quiz-block">
+    <div class="q-text">4. Which word does Charlotte choose last?</div>
+    <div class="q-options">
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">RADIANT</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">TERRIFIC</button>
+      <button class="q-option" onclick="checkAnswer(this,'correct')">HUMBLE</button>
+    </div>
+    <div class="q-feedback">HUMBLE is the final word — and the most ironic. It describes Charlotte far more than Wilbur.</div>
+  </div>
+
+  <div class="quiz-block">
+    <div class="q-text">5. Where does Charlotte die?</div>
+    <div class="q-options">
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">In her web above Wilbur's pen at the farm</button>
+      <button class="q-option" onclick="checkAnswer(this,'correct')">At the county fairground, alone</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">In Fern's garden</button>
+    </div>
+    <div class="q-feedback">She dies at the fair, alone, as the Zuckermans load Wilbur to go home. This is one of the most honest deaths in children's literature.</div>
+  </div>
+
+  <div class="quiz-block">
+    <div class="q-text">6. What does Templeton get in return for his help at the fair?</div>
+    <div class="q-options">
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">A safe place to sleep in the barn</button>
+      <button class="q-option" onclick="checkAnswer(this,'correct')">First choice of Wilbur's food for the rest of his life</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">A place in the farmhouse</button>
+    </div>
+    <div class="q-feedback">Templeton negotiates even in a crisis. Wilbur promises him first pick of his slop every day — and Templeton accepts immediately.</div>
+  </div>
+
+  <div class="quiz-block">
+    <div class="q-text">7. What is the very last line of the novel about?</div>
+    <div class="q-options">
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">Wilbur growing old happily on the farm</button>
+      <button class="q-option" onclick="checkAnswer(this,'wrong')">Fern returning to the barn one last time</button>
+      <button class="q-option" onclick="checkAnswer(this,'correct')">Charlotte — that she was both a true friend and a good writer</button>
+    </div>
+    <div class="q-feedback"><em>"It is not often that someone comes along who is a true friend and a good writer. Charlotte was both."</em></div>
+  </div>
+</section>
+
+<!-- DISCUSSION -->
+<section id="discussion" class="section">
+  <h2 class="sec-title">Discussion Prompts</h2>
+  <div class="sec-rule"></div>
+  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Talk about these with the group. There's no single right answer — what matters is how you defend your thinking.</p>
+
+  <div class="discussion-prompt">
+    <span class="prompt-tag">Friendship</span>
+    <p>Charlotte does everything for Wilbur but asks for nothing in return. Is that realistic? Do you think real friendship always involves giving and receiving? Or can it be completely one-sided?</p>
+  </div>
+  <div class="discussion-prompt">
+    <span class="prompt-tag">Language &amp; Power</span>
+    <p>Charlotte's words don't change Wilbur — they change how people <em>see</em> him. Can you think of real-life examples where words change how we see someone, even if that person hasn't changed?</p>
+  </div>
+  <div class="discussion-prompt">
+    <span class="prompt-tag">Death</span>
+    <p>E.B. White doesn't protect you from Charlotte's death — she dies alone, and she doesn't come back. Why do you think he made that choice? Would the book be better or worse if she survived?</p>
+  </div>
+  <div class="discussion-prompt">
+    <span class="prompt-tag">Templeton</span>
+    <p>Templeton helps, but only for selfish reasons. Without him, Charlotte's plan fails. Does he deserve any credit? What's the difference between someone who helps for selfish reasons and someone who doesn't help at all?</p>
+  </div>
+  <div class="discussion-prompt">
+    <span class="prompt-tag">Fern</span>
+    <p>Fern saves Wilbur at the start, but by the end she's barely paying attention — she's at the fair, talking to a boy called Henry Fussy. Is that sad? Is it just growing up? Do we always have to leave behind the things we cared about when we were younger?</p>
+  </div>
+  <div class="discussion-prompt">
+    <span class="prompt-tag">You &amp; the Book</span>
+    <p>If Charlotte could weave a word in her web to describe <em>you</em>, what word would you want it to be — and why? What word do you think she would actually choose?</p>
+  </div>
+</section>
+
+<!-- MATCHING -->
+<section id="match" class="section">
+  <h2 class="sec-title">Matching Activities</h2>
+  <div class="sec-rule"></div>
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h3>Activity 1 — Charlotte's Words</h3>
+    <p style="margin-bottom:1rem;">Drag each of Charlotte's web words to the description that best fits it.</p>
+  </div>
+  <div class="match-container" id="match1">
+    <div class="match-col" id="match1-source">
+      <h4>Charlotte's Words</h4>
+      <div class="draggable" draggable="true" data-value="some-pig">SOME PIG</div>
+      <div class="draggable" draggable="true" data-value="terrific">TERRIFIC</div>
+      <div class="draggable" draggable="true" data-value="radiant">RADIANT</div>
+      <div class="draggable" draggable="true" data-value="humble">HUMBLE</div>
+    </div>
+    <div class="match-col">
+      <h4>What It Suggests</h4>
+      <div class="drop-zone" data-answer="some-pig"><span class="zone-label">The very first word — vague but powerful</span></div>
+      <div class="drop-zone" data-answer="radiant"><span class="zone-label">Glowing, full of light and beauty</span></div>
+      <div class="drop-zone" data-answer="terrific"><span class="zone-label">Extraordinary, impressive, remarkable</span></div>
+      <div class="drop-zone" data-answer="humble"><span class="zone-label">Not proud — ironically, this describes Charlotte more than Wilbur</span></div>
+    </div>
+  </div>
+  <button class="match-btn" onclick="checkMatch('match1')">Check Answers</button>
+  <button class="reset-btn" onclick="resetMatch('match1','match1-source')">Reset</button>
+  <div class="match-result" id="match1-result"></div>
+
+  <hr style="border:none; border-top:1px solid rgba(44,36,22,0.1); margin:2.5rem 0;">
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h3>Activity 2 — Who Said It?</h3>
+    <p style="margin-bottom:1rem;">Drag each character to the quote or description that best fits them.</p>
+  </div>
+  <div class="match-container" id="match2">
+    <div class="match-col" id="match2-source">
+      <h4>Characters</h4>
+      <div class="draggable" draggable="true" data-value="charlotte">Charlotte</div>
+      <div class="draggable" draggable="true" data-value="wilbur">Wilbur</div>
+      <div class="draggable" draggable="true" data-value="templeton">Templeton</div>
+      <div class="draggable" draggable="true" data-value="fern">Fern</div>
+    </div>
+    <div class="match-col">
+      <h4>Clues</h4>
+      <div class="drop-zone" data-answer="fern"><span class="zone-label">"If I had been very small at birth, would you have killed me?"</span></div>
+      <div class="drop-zone" data-answer="charlotte"><span class="zone-label">Works quietly at night; never takes credit; calls herself Wilbur's friend unprompted</span></div>
+      <div class="drop-zone" data-answer="wilbur"><span class="zone-label">Cries, panics, needs reassurance — but is deeply loving and loyal</span></div>
+      <div class="drop-zone" data-answer="templeton"><span class="zone-label">Helps only when offered a reward; calls himself practical, not sentimental</span></div>
+    </div>
+  </div>
+  <button class="match-btn" onclick="checkMatch('match2')">Check Answers</button>
+  <button class="reset-btn" onclick="resetMatch('match2','match2-source')">Reset</button>
+  <div class="match-result" id="match2-result"></div>
+
+  <hr style="border:none; border-top:1px solid rgba(44,36,22,0.1); margin:2.5rem 0;">
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h3>Activity 3 — Themes and Moments</h3>
+    <p style="margin-bottom:1rem;">Match each theme to the moment in the novel that best shows it.</p>
+  </div>
+  <div class="match-container" id="match3">
+    <div class="match-col" id="match3-source">
+      <h4>Themes</h4>
+      <div class="draggable" draggable="true" data-value="friendship">Friendship</div>
+      <div class="draggable" draggable="true" data-value="death">Death &amp; Legacy</div>
+      <div class="draggable" draggable="true" data-value="language">Power of Language</div>
+      <div class="draggable" draggable="true" data-value="innocence">Innocence vs Reality</div>
+    </div>
+    <div class="match-col">
+      <h4>Moments from the Novel</h4>
+      <div class="drop-zone" data-answer="language"><span class="zone-label">SOME PIG makes the whole town believe Wilbur is miraculous — without him changing at all</span></div>
+      <div class="drop-zone" data-answer="death"><span class="zone-label">Charlotte makes her egg sac the same night she writes her final word</span></div>
+      <div class="drop-zone" data-answer="innocence"><span class="zone-label">Fern understands the barn; at the fair, she only cares about Henry Fussy</span></div>
+      <div class="drop-zone" data-answer="friendship"><span class="zone-label">Charlotte offers to be Wilbur's friend — unprompted, asking for nothing</span></div>
+    </div>
+  </div>
+  <button class="match-btn" onclick="checkMatch('match3')">Check Answers</button>
+  <button class="reset-btn" onclick="resetMatch('match3','match3-source')">Reset</button>
+  <div class="match-result" id="match3-result"></div>
+</section>
+
+<!-- PRESENTATION -->
+<section id="presentation" class="section">
+  <h2 class="sec-title">Your Presentation</h2>
+  <div class="sec-rule"></div>
+  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">You'll be presenting Charlotte's Web to your class. Here's what you need to know.</p>
+
+  <div class="pres-task">
+    <h3>The Task</h3>
+    <p>You will present <em>Charlotte's Web</em> to your class — students who haven't read it. Your job is to make them interested in the book, understand its main ideas, and feel something about it.</p>
+  </div>
+
+  <div class="card red">
+    <h3>What Your Presentation Should Cover</h3>
+    <ul>
+      <li><strong>The story</strong> — what happens? Don't tell every detail. Choose the most important moments.</li>
+      <li><strong>The characters</strong> — who matters most, and why?</li>
+      <li><strong>At least two themes</strong> — what big ideas does the book explore?</li>
+      <li><strong>Your opinion</strong> — what did the book make you feel? What will you remember?</li>
+    </ul>
+  </div>
+
+  <div class="card straw">
+    <h3>A Structure That Works</h3>
+    <ul>
+      <li><strong>Open with a hook</strong> — a question, a quote, or a surprising fact</li>
+      <li><strong>Tell the story briefly</strong> — two to three minutes maximum</li>
+      <li><strong>Go deeper on themes</strong> — pick the ones that interest you most</li>
+      <li><strong>End with your own voice</strong> — what does the book mean to you?</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Good Quotes to Use</h3>
+    <ul>
+      <li><em>"It is not often that someone comes along who is a true friend and a good writer. Charlotte was both."</em></li>
+      <li><em>"I'll be your friend, Wilbur. I've watched you all day and I like you."</em></li>
+      <li><em>"Why did you do all this for me? I don't deserve it. I've never done anything for you."</em><br>— Wilbur<br>
+      <em>"You have been my friend. That in itself is a tremendous thing."</em><br>— Charlotte</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Tips for a Strong Presentation</h3>
+    <ul>
+      <li>Don't read from a script — use short notes, not full sentences</li>
+      <li>Speak slowly and clearly — you know this story, they don't</li>
+      <li>Use Garth Williams' illustrations if you can — they help your audience picture the world</li>
+      <li>It's fine to say what you found difficult or sad in the book — honesty makes presentations interesting</li>
+      <li>Practise at least once before you present</li>
+    </ul>
+  </div>
+
+  <div class="pres-task" style="background:var(--meadow);">
+    <h3>One Final Thought</h3>
+    <p>Charlotte spends the whole novel writing about Wilbur. She uses her skill with words to change how the world sees him. When you do your presentation, you're doing something similar — using <em>your</em> words to help others see a story they haven't experienced yet. That is a real skill. Take it seriously.</p>
+  </div>
+</section>
+
+</main>
+
+<script>
+// NAV
+const sectionOrder = ['overview','part1','part2','part3','themes','characters','quiz','discussion','match','presentation'];
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const idx = sectionOrder.indexOf(id);
+  if (idx >= 0) document.querySelectorAll('nav button')[idx].classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// CHAPTER ACCORDION
+function toggleChapter(head) {
+  const body = head.nextElementSibling;
+  const arrow = head.querySelector('.ch-arrow');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+// QUIZ
+function checkAnswer(btn, result) {
+  const block = btn.closest('.quiz-block');
+  if (block.dataset.answered) return;
+  block.dataset.answered = '1';
+  const options = block.querySelectorAll('.q-option');
+  const feedback = block.querySelector('.q-feedback');
+  options.forEach(o => o.classList.add('locked'));
+  btn.classList.add(result);
+  feedback.classList.add('show', result);
+  if (result === 'wrong') {
+    options.forEach(o => {
+      if (o.getAttribute('onclick') && o.getAttribute('onclick').includes("'correct'")) {
+        o.classList.add('correct');
+      }
+    });
+  }
+}
+
+// DRAG AND DROP
+let draggedEl = null;
+let sourceParent = null;
+
+document.addEventListener('dragstart', e => {
+  if (!e.target.classList.contains('draggable')) return;
+  draggedEl = e.target;
+  sourceParent = e.target.parentElement;
+  draggedEl.classList.add('dragging');
+});
+
+document.addEventListener('dragend', () => {
+  if (draggedEl) draggedEl.classList.remove('dragging');
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('drag-over'));
+  draggedEl = null;
+});
+
+document.addEventListener('dragover', e => {
+  const zone = e.target.closest('.drop-zone');
+  if (!zone) return;
+  e.preventDefault();
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('drag-over'));
+  zone.classList.add('drag-over');
+});
+
+document.addEventListener('drop', e => {
+  const zone = e.target.closest('.drop-zone');
+  if (!zone || !draggedEl) return;
+  e.preventDefault();
+  zone.classList.remove('drag-over');
+  zone.classList.remove('matched-correct','matched-wrong');
+
+  // If zone already has an item, return it to source col
+  const existing = zone.querySelector('.draggable');
+  if (existing) {
+    if (sourceParent) sourceParent.appendChild(existing);
+  }
+
+  zone.appendChild(draggedEl);
+
+  // Remove label text visibility (it stays in DOM but hidden by flex layout)
+  const label = zone.querySelector('.zone-label');
+  if (label) label.style.display = 'none';
+});
+
+function checkMatch(containerId) {
+  const container = document.getElementById(containerId);
+  const zones = container.querySelectorAll('.drop-zone');
+  let correct = 0;
+  zones.forEach(zone => {
+    zone.classList.remove('matched-correct','matched-wrong');
+    const item = zone.querySelector('.draggable');
+    if (item) {
+      const ok = item.dataset.value === zone.dataset.answer;
+      zone.classList.add(ok ? 'matched-correct' : 'matched-wrong');
+      if (ok) correct++;
+    }
+  });
+  const result = document.getElementById(containerId + '-result');
+  if (correct === zones.length) {
+    result.textContent = '✦ Perfect — all correct!';
+    result.style.color = 'var(--meadow)';
+  } else {
+    result.textContent = correct + ' out of ' + zones.length + ' correct. The red ones need another look.';
+    result.style.color = 'var(--barn)';
+  }
+}
+
+function resetMatch(containerId, sourceId) {
+  const container = document.getElementById(containerId);
+  const sourceCol = document.getElementById(sourceId);
+  const zones = container.querySelectorAll('.drop-zone');
+  zones.forEach(zone => {
+    zone.classList.remove('matched-correct','matched-wrong','drag-over');
+    const item = zone.querySelector('.draggable');
+    if (item) sourceCol.appendChild(item);
+    const label = zone.querySelector('.zone-label');
+    if (label) label.style.display = '';
+  });
+  const result = document.getElementById(containerId + '-result');
+  if (result) result.textContent = '';
+}
+</script>
+</body>
+</html>
