@@ -172,10 +172,7 @@ main{max-width:720px;margin:0 auto;padding:0 2rem 5rem;}
 .sp-quote{font-family:'Crimson Text',serif;font-style:italic;font-size:1.22rem;color:var(--ink);line-height:1.72;margin-bottom:0.9rem;}
 .sp-note{font-family:'Source Sans 3',sans-serif;font-size:0.77rem;color:var(--ink-soft);}
 
-/* SVG ILLUSTRATIONS */
-.illus-wrap{margin:1.8rem 0;display:flex;justify-content:center;}
-.illus-wrap svg{max-width:100%;height:auto;opacity:0.88;}
-.illus-caption{font-family:'Source Sans 3',sans-serif;font-size:0.7rem;color:var(--ink-soft);text-align:center;letter-spacing:0.06em;margin-top:0.5rem;font-style:italic;}
+
 
 /* FOOTER */
 footer{max-width:720px;margin:0 auto;padding:1.4rem 2rem;border-top:1px solid var(--divider);font-family:'Source Sans 3',sans-serif;font-size:0.7rem;color:var(--ink-soft);letter-spacing:0.05em;display:flex;justify-content:space-between;}
@@ -293,72 +290,6 @@ footer{max-width:720px;margin:0 auto;padding:1.4rem 2rem;border-top:1px solid va
       <div class="word-count" id="wc1-1" style="max-width:480px;margin:0 auto;"></div>
     </div>
   </div>
-
-  <!-- ILLUSTRATION 1: Fern and her father -->
-  <div class="illus-wrap">
-    <div>
-      <svg width="420" height="240" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="display:block;">
-        <defs>
-          <filter id="ink1"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="0.7" xChannelSelector="R" yChannelSelector="G"/></filter>
-        </defs>
-        <!-- Ground / field -->
-        <path d="M0 195 Q105 185 210 190 Q315 195 420 188 L420 240 L0 240Z" fill="#c8b98a" opacity="0.35"/>
-        <!-- Grass tufts -->
-        <g stroke="#6a5a38" stroke-width="1.2" fill="none" opacity="0.5">
-          <path d="M30 195 Q32 188 34 195"/><path d="M34 193 Q36 186 38 193"/>
-          <path d="M80 192 Q82 185 84 192"/><path d="M155 193 Q157 186 159 193"/>
-          <path d="M260 191 Q262 184 264 191"/><path d="M340 193 Q342 186 344 193"/>
-          <path d="M390 194 Q392 187 394 194"/>
-        </g>
-        <!-- Father — tall, stooped slightly, axe handle -->
-        <g filter="url(#ink1)">
-          <!-- body -->
-          <rect x="268" y="108" width="18" height="52" rx="3" fill="none" stroke="#2B2520" stroke-width="1.6"/>
-          <!-- head -->
-          <ellipse cx="277" cy="100" rx="10" ry="11" fill="none" stroke="#2B2520" stroke-width="1.5"/>
-          <!-- cap -->
-          <path d="M267 97 Q277 90 287 97" fill="none" stroke="#2B2520" stroke-width="1.4"/>
-          <line x1="265" y1="97" x2="289" y2="97" stroke="#2B2520" stroke-width="1.2"/>
-          <!-- arm holding axe -->
-          <line x1="286" y1="120" x2="305" y2="138" stroke="#2B2520" stroke-width="1.5"/>
-          <!-- axe -->
-          <line x1="305" y1="138" x2="312" y2="160" stroke="#2B2520" stroke-width="1.8"/>
-          <path d="M305 138 Q318 132 316 145 Q310 148 305 138Z" fill="none" stroke="#2B2520" stroke-width="1.3"/>
-          <!-- legs -->
-          <line x1="272" y1="160" x2="268" y2="190" stroke="#2B2520" stroke-width="1.5"/>
-          <line x1="282" y1="160" x2="286" y2="190" stroke="#2B2520" stroke-width="1.5"/>
-          <!-- boots -->
-          <path d="M264 189 Q268 194 274 191" fill="none" stroke="#2B2520" stroke-width="1.5"/>
-          <path d="M283 189 Q287 194 293 191" fill="none" stroke="#2B2520" stroke-width="1.5"/>
-        </g>
-        <!-- Fern — small, pyjamas, facing father -->
-        <g filter="url(#ink1)">
-          <!-- body/nightgown -->
-          <path d="M130 128 Q122 155 118 190 Q130 192 136 190 Q138 165 134 150 Q140 165 142 190 Q148 192 154 190 Q150 155 142 128Z" fill="none" stroke="#2B2520" stroke-width="1.4"/>
-          <!-- head -->
-          <ellipse cx="136" cy="118" rx="9" ry="10" fill="none" stroke="#2B2520" stroke-width="1.5"/>
-          <!-- hair — loose, just woken up -->
-          <path d="M127 112 Q124 104 130 108" fill="none" stroke="#2B2520" stroke-width="1.1"/>
-          <path d="M145 112 Q148 104 142 108" fill="none" stroke="#2B2520" stroke-width="1.1"/>
-          <path d="M128 108 Q136 100 144 108" fill="none" stroke="#2B2520" stroke-width="1.1"/>
-          <!-- arms raised, pleading -->
-          <line x1="130" y1="135" x2="112" y2="148" stroke="#2B2520" stroke-width="1.4"/>
-          <line x1="142" y1="135" x2="158" y2="146" stroke="#2B2520" stroke-width="1.4"/>
-          <!-- feet/bare -->
-          <path d="M115 189 Q118 194 124 191" fill="none" stroke="#2B2520" stroke-width="1.3"/>
-          <path d="M140 189 Q143 194 149 191" fill="none" stroke="#2B2520" stroke-width="1.3"/>
-        </g>
-        <!-- Dawn sky suggestion — horizon line -->
-        <line x1="0" y1="148" x2="420" y2="148" stroke="#c8b98a" stroke-width="0.6" opacity="0.4"/>
-        <!-- Barn silhouette far background -->
-        <g opacity="0.18" fill="#2B2520">
-          <rect x="340" y="110" width="55" height="45"/>
-          <polygon points="337,110 395,110 366,85"/>
-          <rect x="358" y="128" width="14" height="27"/>
-        </g>
-      </svg>
-      <div class="illus-caption">Fern faces her father in the field — Chapter 1</div>
-    </div>
   </div>
 
   <!-- 1.2 LIGHT — the argument (FIXED: short tokens, genuinely porous categories) -->
@@ -413,69 +344,6 @@ footer{max-width:720px;margin:0 auto;padding:1.4rem 2rem;border-top:1px solid va
       <div class="word-count" id="wc2-1" style="max-width:480px;margin:0 auto;"></div>
     </div>
   </div>
-
-  <!-- ILLUSTRATION 2: Charlotte in her web -->
-  <div class="illus-wrap">
-    <div>
-      <svg width="380" height="260" viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
-        <defs><filter id="ink2"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0.8"/></filter></defs>
-        <!-- Barn beam / doorframe -->
-        <rect x="30" y="0" width="22" height="260" fill="none" stroke="#2B2520" stroke-width="2" opacity="0.5"/>
-        <rect x="328" y="0" width="22" height="260" fill="none" stroke="#2B2520" stroke-width="2" opacity="0.5"/>
-        <rect x="30" y="0" width="320" height="20" fill="none" stroke="#2B2520" stroke-width="2" opacity="0.5"/>
-        <!-- Wood grain on beams -->
-        <g stroke="#2B2520" stroke-width="0.5" opacity="0.25">
-          <line x1="34" y1="30" x2="48" y2="40"/><line x1="34" y1="55" x2="48" y2="62"/>
-          <line x1="34" y1="80" x2="48" y2="88"/><line x1="34" y1="120" x2="48" y2="128"/>
-          <line x1="334" y1="30" x2="348" y2="40"/><line x1="334" y1="70" x2="348" y2="78"/>
-        </g>
-        <!-- Web radial threads from top-centre -->
-        <g stroke="#2B2520" stroke-width="0.7" opacity="0.45" filter="url(#ink2)">
-          <line x1="190" y1="18" x2="190" y2="175"/>
-          <line x1="190" y1="18" x2="60"  y2="140"/>
-          <line x1="190" y1="18" x2="320" y2="140"/>
-          <line x1="190" y1="18" x2="95"  y2="175"/>
-          <line x1="190" y1="18" x2="285" y2="175"/>
-          <line x1="190" y1="18" x2="52"  y2="80"/>
-          <line x1="190" y1="18" x2="328" y2="80"/>
-          <line x1="190" y1="18" x2="100" y2="30"/>
-          <line x1="190" y1="18" x2="280" y2="30"/>
-        </g>
-        <!-- Web spiral threads -->
-        <g stroke="#2B2520" stroke-width="0.6" fill="none" opacity="0.4" filter="url(#ink2)">
-          <ellipse cx="190" cy="55"  rx="28"  ry="16"/>
-          <ellipse cx="190" cy="80"  rx="54"  ry="28"/>
-          <ellipse cx="190" cy="105" rx="80"  ry="42"/>
-          <ellipse cx="190" cy="130" rx="108" ry="56"/>
-          <ellipse cx="190" cy="155" rx="130" ry="66"/>
-        </g>
-        <!-- "SOME PIG" text woven into web -->
-        <text x="190" y="98" font-family="Georgia,serif" font-size="13" fill="#2B2520" text-anchor="middle" opacity="0.7" font-style="italic" letter-spacing="2">SOME PIG</text>
-        <!-- Charlotte — small spider body at web centre-top -->
-        <g filter="url(#ink2)" opacity="0.85">
-          <!-- abdomen -->
-          <ellipse cx="190" cy="30" rx="7" ry="9" fill="none" stroke="#2B2520" stroke-width="1.4"/>
-          <!-- cephalothorax -->
-          <ellipse cx="190" cy="22" rx="5" ry="5" fill="none" stroke="#2B2520" stroke-width="1.2"/>
-          <!-- legs — 4 pairs -->
-          <line x1="185" y1="24" x2="174" y2="16"/><line x1="174" y1="16" x2="166" y2="20"/>
-          <line x1="185" y1="26" x2="173" y2="22"/><line x1="173" y1="22" x2="164" y2="28"/>
-          <line x1="195" y1="24" x2="206" y2="16"/><line x1="206" y1="16" x2="214" y2="20"/>
-          <line x1="195" y1="26" x2="207" y2="22"/><line x1="207" y1="22" x2="216" y2="28"/>
-          <line x1="184" y1="29" x2="172" y2="30"/><line x1="172" y1="30" x2="163" y2="36"/>
-          <line x1="196" y1="29" x2="208" y2="30"/><line x1="208" y1="30" x2="217" y2="36"/>
-          <line x1="184" y1="33" x2="175" y2="38"/><line x1="175" y1="38" x2="168" y2="46"/>
-          <line x1="196" y1="33" x2="205" y2="38"/><line x1="205" y1="38" x2="212" y2="46"/>
-        </g>
-        <!-- Morning light rays -->
-        <g stroke="#c8a855" stroke-width="0.8" opacity="0.18">
-          <line x1="190" y1="0" x2="50" y2="200"/>
-          <line x1="190" y1="0" x2="190" y2="260"/>
-          <line x1="190" y1="0" x2="330" y2="200"/>
-        </g>
-      </svg>
-      <div class="illus-caption">Charlotte at the centre of her web — morning light through the barn door</div>
-    </div>
   </div>
 
   <!-- 2.2 DENSE — four words -->
@@ -518,81 +386,6 @@ footer{max-width:720px;margin:0 auto;padding:1.4rem 2rem;border-top:1px solid va
   <div class="zone-title">The Barn</div>
   <div class="zone-subtitle">Mid reading · Zone Three</div>
   <div class="zone-teacher-note">FIXED: Character panels are now shorter and each one immediately opens a focused discussion question — not just a reflection prompt at the end. Templeton surface still generates the best argument. Open one character at a time in projection.</div>
-
-  <!-- ILLUSTRATION 3: The barn interior -->
-  <div class="illus-wrap" style="margin-top:0;margin-bottom:2rem;">
-    <div>
-      <svg width="500" height="200" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
-        <defs><filter id="ink3"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0"/></filter></defs>
-        <!-- Floor -->
-        <path d="M0 160 L500 160 L500 200 L0 200Z" fill="#c8a855" opacity="0.15"/>
-        <!-- Straw on floor -->
-        <g stroke="#9a7a35" stroke-width="0.8" opacity="0.35" filter="url(#ink3)">
-          <line x1="20"  y1="175" x2="65"  y2="168"/><line x1="40"  y1="180" x2="80"  y2="172"/>
-          <line x1="100" y1="172" x2="145" y2="178"/><line x1="120" y1="168" x2="160" y2="175"/>
-          <line x1="200" y1="174" x2="240" y2="169"/><line x1="260" y1="170" x2="305" y2="176"/>
-          <line x1="350" y1="173" x2="390" y2="168"/><line x1="420" y1="169" x2="465" y2="175"/>
-        </g>
-        <!-- Back wall -->
-        <rect x="0" y="0" width="500" height="162" fill="none" stroke="#2B2520" stroke-width="0.5" opacity="0.1"/>
-        <!-- Wall planks -->
-        <g stroke="#2B2520" stroke-width="0.5" opacity="0.12">
-          <line x1="0" y1="0" x2="0" y2="160"/><line x1="55" y1="0" x2="55" y2="160"/>
-          <line x1="110" y1="0" x2="110" y2="160"/><line x1="165" y1="0" x2="165" y2="160"/>
-          <line x1="220" y1="0" x2="220" y2="160"/><line x1="275" y1="0" x2="275" y2="160"/>
-          <line x1="330" y1="0" x2="330" y2="160"/><line x1="385" y1="0" x2="385" y2="160"/>
-          <line x1="440" y1="0" x2="440" y2="160"/><line x1="495" y1="0" x2="495" y2="160"/>
-        </g>
-        <!-- Rafters -->
-        <g stroke="#2B2520" stroke-width="2.5" opacity="0.4" filter="url(#ink3)">
-          <line x1="0" y1="35" x2="500" y2="45"/>
-          <line x1="0" y1="75" x2="500" y2="82"/>
-        </g>
-        <!-- Wilbur in pen — round pig shape, pen fence -->
-        <g filter="url(#ink3)">
-          <!-- pen fence -->
-          <rect x="175" y="128" width="150" height="35" rx="2" fill="none" stroke="#2B2520" stroke-width="1.8"/>
-          <line x1="210" y1="128" x2="210" y2="163"/><line x1="250" y1="128" x2="250" y2="163"/><line x1="290" y1="128" x2="290" y2="163"/>
-          <!-- wilbur body -->
-          <ellipse cx="248" cy="148" rx="28" ry="16" fill="none" stroke="#2B2520" stroke-width="1.5"/>
-          <!-- head -->
-          <ellipse cx="276" cy="145" rx="12" ry="10" fill="none" stroke="#2B2520" stroke-width="1.4"/>
-          <!-- snout -->
-          <ellipse cx="286" cy="145" rx="5" ry="4" fill="none" stroke="#2B2520" stroke-width="1.2"/>
-          <circle cx="284" cy="144" r="1" fill="#2B2520"/><circle cx="287" cy="144" r="1" fill="#2B2520"/>
-          <!-- ear -->
-          <path d="M272 137 Q268 130 275 134" fill="none" stroke="#2B2520" stroke-width="1.2"/>
-          <!-- eye -->
-          <circle cx="280" cy="141" r="1.5" fill="#2B2520"/>
-          <!-- legs -->
-          <line x1="233" y1="162" x2="231" y2="172"/><line x1="245" y1="163" x2="243" y2="173"/>
-          <line x1="257" y1="163" x2="256" y2="172"/><line x1="265" y1="162" x2="264" y2="172"/>
-          <!-- tail curl -->
-          <path d="M220 148 Q212 143 215 138 Q218 133 222 138" fill="none" stroke="#2B2520" stroke-width="1.2"/>
-          <!-- straw in pen -->
-          <line x1="190" y1="158" x2="220" y2="154"/><line x1="205" y1="162" x2="230" y2="158"/>
-        </g>
-        <!-- Charlotte's web top-right corner -->
-        <g stroke="#2B2520" stroke-width="0.6" opacity="0.5" filter="url(#ink3)">
-          <line x1="440" y1="10" x2="380" y2="78"/><line x1="440" y1="10" x2="440" y2="78"/>
-          <line x1="440" y1="10" x2="500" y2="72"/><line x1="440" y1="10" x2="410" y2="72"/>
-          <line x1="440" y1="10" x2="470" y2="72"/>
-          <ellipse cx="440" cy="35" rx="18" ry="14" fill="none"/>
-          <ellipse cx="440" cy="52" rx="36" ry="28" fill="none"/>
-          <!-- charlotte -->
-          <ellipse cx="440" cy="18" rx="5" ry="6" fill="none" stroke-width="1.1"/>
-          <ellipse cx="440" cy="13" rx="3" ry="3" fill="none" stroke-width="1"/>
-          <line x1="437" y1="14" x2="431" y2="9"/><line x1="443" y1="14" x2="449" y2="9"/>
-          <line x1="436" y1="16" x2="429" y2="14"/><line x1="444" y1="16" x2="451" y2="14"/>
-          <line x1="436" y1="19" x2="429" y2="20"/><line x1="444" y1="19" x2="451" y2="20"/>
-          <line x1="437" y1="22" x2="431" y2="26"/><line x1="443" y1="22" x2="449" y2="26"/>
-        </g>
-        <!-- Light shaft from door left -->
-        <path d="M0 40 Q30 60 0 100" fill="#c8a855" opacity="0.07"/>
-        <path d="M0 40 L60 90 L60 100 L0 100Z" fill="#c8a855" opacity="0.05"/>
-      </svg>
-      <div class="illus-caption">The Zuckerman barn — Wilbur in his pen, Charlotte above in the corner</div>
-    </div>
   </div>
 
   <!-- 3.1 DENSE — character explorer (FIXED: short panels, immediate discussion Q per character) -->
@@ -713,87 +506,6 @@ footer{max-width:720px;margin:0 auto;padding:1.4rem 2rem;border-top:1px solid va
     <textarea class="thinking-area" id="t4-1" style="min-height:100px;" placeholder="Take your time with this one." oninput="wc(this,'wc4-1')"></textarea>
     <div class="word-count" id="wc4-1"></div>
   </div>
-
-  <!-- ILLUSTRATION 4: The fair at night -->
-  <div class="illus-wrap">
-    <div>
-      <svg width="460" height="200" viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
-        <defs><filter id="ink4"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0.9"/></filter></defs>
-        <!-- Night sky -->
-        <rect x="0" y="0" width="460" height="200" fill="transparent"/>
-        <!-- Stars -->
-        <g fill="#2B2520" opacity="0.3">
-          <circle cx="30"  cy="18" r="1"/><circle cx="75"  cy="8"  r="1.2"/><circle cx="120" cy="22" r="0.9"/>
-          <circle cx="180" cy="10" r="1"/><circle cx="240" cy="18" r="1.3"/><circle cx="310" cy="6"  r="0.9"/>
-          <circle cx="370" cy="15" r="1"/><circle cx="420" cy="10" r="1.2"/><circle cx="450" cy="25" r="0.8"/>
-          <circle cx="55"  cy="35" r="0.8"/><circle cx="150" cy="40" r="1"/><circle cx="290" cy="30" r="0.9"/>
-        </g>
-        <!-- Fairground lights on strings -->
-        <g filter="url(#ink4)">
-          <path d="M20 55 Q115 48 230 52 Q345 56 445 50" fill="none" stroke="#2B2520" stroke-width="0.7" opacity="0.5"/>
-          <path d="M20 55 Q115 48 230 52 Q345 56 445 50" fill="none" stroke="#c8a855" stroke-width="0.5" opacity="0.25"/>
-          <!-- bulbs on string -->
-          <g fill="none" stroke="#2B2520" stroke-width="0.8" opacity="0.55">
-            <ellipse cx="55"  cy="58" rx="4" ry="5"/><ellipse cx="105" cy="54" rx="4" ry="5"/>
-            <ellipse cx="160" cy="56" rx="4" ry="5"/><ellipse cx="215" cy="53" rx="4" ry="5"/>
-            <ellipse cx="270" cy="55" rx="4" ry="5"/><ellipse cx="325" cy="57" rx="4" ry="5"/>
-            <ellipse cx="385" cy="53" rx="4" ry="5"/><ellipse cx="430" cy="51" rx="4" ry="5"/>
-          </g>
-          <!-- glow under bulbs -->
-          <g fill="#c8a855" opacity="0.08">
-            <ellipse cx="55"  cy="65" rx="12" ry="6"/><ellipse cx="160" cy="63" rx="12" ry="6"/>
-            <ellipse cx="270" cy="62" rx="12" ry="6"/><ellipse cx="385" cy="60" rx="12" ry="6"/>
-          </g>
-        </g>
-        <!-- Animal stalls / pens in a row -->
-        <g filter="url(#ink4)" stroke="#2B2520" fill="none">
-          <!-- stall 1 -->
-          <rect x="30" y="80" width="80" height="80" stroke-width="1.5"/>
-          <line x1="30" y1="80" x2="30" y2="160"/><line x1="110" y1="80" x2="110" y2="160"/>
-          <!-- stall 2 — Wilbur's -->
-          <rect x="130" y="75" width="90" height="85" stroke-width="2"/>
-          <line x1="150" y1="75" x2="150" y2="160"/><line x1="200" y1="75" x2="200" y2="160"/>
-          <!-- stall 3 -->
-          <rect x="240" y="80" width="80" height="80" stroke-width="1.5"/>
-          <rect x="340" y="82" width="75" height="78" stroke-width="1.5"/>
-          <!-- stall signs -->
-          <rect x="148" y="83" width="64" height="16" rx="2" stroke-width="1"/>
-        </g>
-        <!-- "WILBUR" sign text -->
-        <text x="180" y="95" font-family="Georgia,serif" font-size="9" fill="#2B2520" text-anchor="middle" opacity="0.65" letter-spacing="1">WILBUR</text>
-        <!-- Wilbur in pen 2 -->
-        <g filter="url(#ink4)" stroke="#2B2520" fill="none">
-          <ellipse cx="175" cy="138" rx="22" ry="14" stroke-width="1.4"/>
-          <ellipse cx="196" cy="135" rx="10" ry="9" stroke-width="1.2"/>
-          <ellipse cx="205" cy="135" rx="4" ry="3" stroke-width="1"/>
-          <circle cx="199" cy="133" r="1.2" fill="#2B2520"/><circle cx="203" cy="133" r="1" fill="#2B2520"/>
-          <circle cx="200" cy="130" r="1.5" fill="#2B2520"/>
-          <line x1="163" y1="150" x2="161" y2="160"/><line x1="172" y1="152" x2="170" y2="162"/>
-          <line x1="182" y1="152" x2="181" y2="162"/><line x1="190" y1="151" x2="189" y2="161"/>
-        </g>
-        <!-- Charlotte's web in Wilbur's pen corner -->
-        <g stroke="#2B2520" stroke-width="0.5" opacity="0.4" filter="url(#ink4)">
-          <line x1="130" y1="76" x2="145" y2="100"/><line x1="130" y1="76" x2="130" y2="100"/>
-          <line x1="130" y1="76" x2="116" y2="98"/>
-          <ellipse cx="130" cy="85" rx="9" ry="6" fill="none"/>
-          <ellipse cx="130" cy="93" rx="16" ry="10" fill="none"/>
-          <!-- charlotte tiny -->
-          <ellipse cx="130" cy="79" rx="3" ry="4" fill="none" stroke-width="0.9"/>
-          <ellipse cx="130" cy="76" rx="2" ry="2" fill="none" stroke-width="0.8"/>
-          <line x1="128" y1="77" x2="123" y2="73"/><line x1="132" y1="77" x2="137" y2="73"/>
-          <line x1="127" y1="79" x2="122" y2="78"/><line x1="133" y1="79" x2="138" y2="78"/>
-          <line x1="127" y1="81" x2="122" y2="84"/><line x1="133" y1="81" x2="138" y2="84"/>
-          <line x1="128" y1="83" x2="124" y2="87"/><line x1="132" y1="83" x2="136" y2="87"/>
-        </g>
-        <!-- Puddle reflections on ground -->
-        <g fill="#2B2520" opacity="0.06">
-          <ellipse cx="70"  cy="170" rx="25" ry="8"/>
-          <ellipse cx="175" cy="172" rx="30" ry="7"/>
-          <ellipse cx="280" cy="168" rx="22" ry="6"/>
-        </g>
-      </svg>
-      <div class="illus-caption">The county fair at night — Wilbur in his pen, Charlotte above him</div>
-    </div>
   </div>
 
   <!-- 4.2 DENSE — moment ranking -->
@@ -844,81 +556,6 @@ footer{max-width:720px;margin:0 auto;padding:1.4rem 2rem;border-top:1px solid va
       <div class="word-count" id="wc5-1"></div>
     </div>
   </div>
-
-  <!-- ILLUSTRATION 5: Spring, egg sac opening -->
-  <div class="illus-wrap">
-    <div>
-      <svg width="400" height="210" viewBox="0 0 400 210" xmlns="http://www.w3.org/2000/svg">
-        <defs><filter id="ink5"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0.9"/></filter></defs>
-        <!-- Branch -->
-        <g filter="url(#ink5)" stroke="#2B2520" fill="none">
-          <path d="M0 120 Q60 108 120 115 Q180 122 240 110 Q300 98 380 105" stroke-width="3" opacity="0.7"/>
-          <!-- smaller branch -->
-          <path d="M140 115 Q160 90 175 70" stroke-width="1.8" opacity="0.5"/>
-          <path d="M200 112 Q220 85 228 60" stroke-width="1.6" opacity="0.5"/>
-          <!-- Spring buds/leaves -->
-          <ellipse cx="175" cy="68" rx="8" ry="12" stroke-width="1.2" opacity="0.5"/>
-          <ellipse cx="228" cy="58" rx="7" ry="11" stroke-width="1.2" opacity="0.5"/>
-          <ellipse cx="155" cy="85" rx="6" ry="9" stroke-width="1" opacity="0.4"/>
-          <ellipse cx="310" cy="100" rx="7" ry="10" stroke-width="1" opacity="0.4"/>
-          <ellipse cx="350" cy="102" rx="5" ry="8" stroke-width="1" opacity="0.4"/>
-        </g>
-        <!-- Egg sac hanging from branch -->
-        <g filter="url(#ink5)" stroke="#2B2520" fill="none">
-          <line x1="200" y1="110" x2="200" y2="130" stroke-width="1"/>
-          <!-- sac — papery oval -->
-          <ellipse cx="200" cy="148" rx="18" ry="22" stroke-width="1.6" opacity="0.7"/>
-          <!-- texture lines on sac -->
-          <path d="M184 142 Q200 138 216 142" stroke-width="0.7" opacity="0.4"/>
-          <path d="M182 148 Q200 144 218 148" stroke-width="0.7" opacity="0.4"/>
-          <path d="M184 154 Q200 150 216 154" stroke-width="0.7" opacity="0.4"/>
-          <!-- opening at top -->
-          <path d="M192 128 Q200 125 208 128" stroke-width="1.2" opacity="0.6"/>
-        </g>
-        <!-- Baby spiders floating away on silk -->
-        <g filter="url(#ink5)" stroke="#2B2520" fill="none" opacity="0.6">
-          <!-- spider 1 -->
-          <line x1="200" y1="126" x2="155" y2="60" stroke-width="0.5"/>
-          <ellipse cx="154" cy="56" rx="3" ry="4" stroke-width="0.9"/>
-          <ellipse cx="154" cy="52" rx="2" ry="2" stroke-width="0.8"/>
-          <line x1="152" y1="52" x2="148" y2="49"/><line x1="156" y1="52" x2="160" y2="49"/>
-          <line x1="151" y1="54" x2="147" y2="53"/><line x1="157" y1="54" x2="161" y2="53"/>
-          <line x1="151" y1="57" x2="147" y2="59"/><line x1="157" y1="57" x2="161" y2="59"/>
-          <line x1="152" y1="59" x2="149" y2="62"/><line x1="156" y1="59" x2="159" y2="62"/>
-          <!-- spider 2 -->
-          <line x1="200" y1="126" x2="258" y2="45" stroke-width="0.5"/>
-          <ellipse cx="259" cy="41" rx="3" ry="4" stroke-width="0.9"/>
-          <ellipse cx="259" cy="37" rx="2" ry="2" stroke-width="0.8"/>
-          <line x1="257" y1="37" x2="253" y2="34"/><line x1="261" y1="37" x2="265" y2="34"/>
-          <line x1="256" y1="39" x2="252" y2="38"/><line x1="262" y1="39" x2="266" y2="38"/>
-          <line x1="256" y1="42" x2="252" y2="44"/><line x1="262" y1="42" x2="266" y2="44"/>
-          <line x1="257" y1="44" x2="254" y2="47"/><line x1="261" y1="44" x2="264" y2="47"/>
-          <!-- spider 3 — tiny, high up -->
-          <line x1="200" y1="126" x2="120" y2="25" stroke-width="0.4"/>
-          <ellipse cx="119" cy="21" rx="2.5" ry="3" stroke-width="0.8"/>
-          <line x1="117" y1="21" x2="113" y2="18"/><line x1="121" y1="21" x2="125" y2="18"/>
-          <line x1="116" y1="23" x2="112" y2="22"/><line x1="122" y1="23" x2="126" y2="22"/>
-          <line x1="116" y1="25" x2="112" y2="27"/><line x1="122" y1="25" x2="126" y2="27"/>
-          <!-- spider 4 — going right -->
-          <line x1="200" y1="126" x2="310" y2="30" stroke-width="0.4"/>
-          <ellipse cx="311" cy="26" rx="2.5" ry="3" stroke-width="0.8"/>
-          <line x1="309" y1="26" x2="305" y2="23"/><line x1="313" y1="26" x2="317" y2="23"/>
-          <line x1="308" y1="28" x2="304" y2="27"/><line x1="314" y1="28" x2="318" y2="27"/>
-          <line x1="308" y1="30" x2="304" y2="32"/><line x1="314" y1="30" x2="318" y2="32"/>
-        </g>
-        <!-- Wilbur below, watching, small -->
-        <g filter="url(#ink5)" stroke="#2B2520" fill="none" opacity="0.65">
-          <ellipse cx="200" cy="195" rx="20" ry="12"/>
-          <ellipse cx="218" cy="192" rx="9" ry="8"/>
-          <ellipse cx="226" cy="192" rx="4" ry="3"/>
-          <circle cx="221" cy="189" r="1.3" fill="#2B2520"/>
-          <path d="M181 193 Q178 190 182 187 Q186 183 188 188" stroke-width="1"/>
-          <!-- wilbur looking up -->
-          <line x1="215" y1="184" x2="214" y2="178"/>
-        </g>
-      </svg>
-      <div class="illus-caption">Spring — the egg sac opens, the spiders scatter on the wind; Wilbur watches from below</div>
-    </div>
   </div>
 
   <!-- 5.2 DENSE — Charlotte's death sorting (FIXED: interpretive positions, not facts) -->
