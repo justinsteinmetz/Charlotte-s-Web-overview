@@ -3,892 +3,1470 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Charlotte's Web — Interactive Lesson</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<title>Charlotte's Web — A Reading Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --cream: #f5f0e4;
-  --parchment: #ede5cf;
-  --barn: #8b2c2c;
-  --barn-dark: #6b1f1f;
-  --meadow: #4a7c59;
-  --straw: #c9a84c;
-  --ink: #2c2416;
-  --ink-light: #4a3f2f;
+  --parchment:   #F4F0E6;
+  --beige:       #E8E0CF;
+  --sunfade:     #EEE6D6;
+  --ink:         #2B2520;
+  --ink-mid:     #574E45;
+  --ink-soft:    #8A7B6F;
+  --ochre:       #B8763A;
+  --sage:        #6A8C72;
+  --denim:       #6A7A8C;
+  --divider:     #D5CABC;
+  --surface:     #EDE6D4;
+  --surface-alt: #E2D9C6;
+  --shadow-warm: rgba(43,37,32,0.08);
+  --shadow-mid:  rgba(43,37,32,0.14);
+  --barn:        #7A2828;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--cream); color: var(--ink); font-family: 'Lora', Georgia, serif; min-height: 100vh; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:17px;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.025;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size:320px 320px;}
+body{background-color:var(--parchment);color:var(--ink);font-family:'Source Sans 3',sans-serif;font-weight:400;line-height:1.65;min-height:100vh;position:relative;}
 
-header {
-  background: var(--barn);
-  background-image:
-    repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(0,0,0,0.05) 30px,rgba(0,0,0,0.05) 31px),
-    repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(0,0,0,0.03) 30px,rgba(0,0,0,0.03) 31px);
-  padding: 3rem 2rem 2.5rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+/* MASTHEAD */
+.masthead{max-width:720px;margin:0 auto;padding:4rem 2rem 2.5rem;}
+.masthead-rule{height:1.5px;background:linear-gradient(90deg,transparent,var(--ochre) 20%,var(--ochre) 80%,transparent);margin-bottom:2.2rem;}
+.masthead-label{font-family:'Source Sans 3',sans-serif;font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--ochre);margin-bottom:0.85rem;}
+.masthead h1{font-family:'Crimson Text',serif;font-style:italic;font-size:clamp(2.1rem,5vw,3rem);font-weight:600;color:var(--ink);line-height:1.15;letter-spacing:-0.3px;margin-bottom:0.5rem;}
+.masthead-author{font-family:'Crimson Text',serif;font-size:1.05rem;color:var(--ink-soft);font-style:italic;}
+.masthead-byline{font-family:'Source Sans 3',sans-serif;font-size:0.78rem;color:var(--ink-soft);letter-spacing:0.04em;margin-top:1.6rem;border-left:2px solid var(--divider);padding-left:0.9rem;line-height:1.65;}
+.masthead-web{float:right;width:80px;height:80px;opacity:0.12;margin:0 0 1rem 1.5rem;}
+
+/* NAV */
+.zone-nav-wrap{border-top:1px solid var(--divider);border-bottom:1px solid var(--divider);background:var(--sunfade);position:sticky;top:0;z-index:100;}
+.zone-nav{max-width:720px;margin:0 auto;padding:0 2rem;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+.zone-nav::-webkit-scrollbar{display:none;}
+.zone-btn{background:none;border:none;border-bottom:2.5px solid transparent;padding:0.85rem 1.1rem 0.75rem;font-family:'Crimson Text',serif;font-size:0.92rem;color:var(--ink-soft);cursor:pointer;white-space:nowrap;transition:color 0.2s,border-color 0.2s;}
+.zone-btn:hover{color:var(--ink);}
+.zone-btn.active{color:var(--ink);border-bottom-color:var(--ochre);}
+.zone-btn .zone-num{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;display:block;color:var(--ochre);margin-bottom:0.12rem;opacity:0.75;}
+
+/* MAIN */
+main{max-width:720px;margin:0 auto;padding:0 2rem 5rem;}
+.zone{display:none;padding-top:3rem;}
+.zone.active{display:block;}
+.zone.entering{animation:zoneIn 0.4s ease both;}
+@keyframes zoneIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.zone-title{font-family:'Crimson Text',serif;font-style:italic;font-size:1.7rem;color:var(--ink);margin-bottom:0.3rem;font-weight:400;}
+.zone-subtitle{font-family:'Source Sans 3',sans-serif;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:0.6rem;}
+.zone-teacher-note{font-family:'Source Sans 3',sans-serif;font-size:0.77rem;color:var(--ink-soft);border-left:2px solid var(--divider);padding-left:0.8rem;margin-bottom:2.4rem;line-height:1.55;max-width:560px;opacity:0.75;}
+
+/* SURFACES */
+.surface{background:var(--surface);border:1px solid var(--divider);border-radius:5px;padding:2rem 2.2rem;margin-bottom:2.4rem;box-shadow:0 8px 24px rgba(100,80,50,0.08);}
+.surface.light{padding:2.6rem 2.4rem;background:rgba(244,240,230,0.55);border-color:rgba(213,202,188,0.6);margin-bottom:2.8rem;}
+.surface.dense{padding:1.8rem 2rem;background:var(--surface-alt);border-color:var(--divider);border-left:3px solid var(--ochre);border-radius:0 5px 5px 0;margin-bottom:2.4rem;}
+.surface.reflective{background:transparent;border:none;box-shadow:none;padding:3.5rem 0;border-top:1px solid var(--divider);border-bottom:1px solid var(--divider);border-radius:0;margin-bottom:3rem;text-align:center;max-width:540px;margin-inline:auto;}
+.surface.reflective .entry-prompt,.surface.reflective .entry-note{max-width:540px;margin-left:auto;margin-right:auto;}
+.surface.reflective .thinking-area{max-width:540px;margin-left:auto;margin-right:auto;text-align:left;}
+.surface.reflective .word-count{max-width:540px;margin-left:auto;margin-right:auto;}
+.surface.open{background:transparent;border:none;box-shadow:none;padding-block:6rem;padding-inline:0;border-top:1px solid var(--divider);border-radius:0;}
+[data-interactive]{transition:box-shadow 0.25s cubic-bezier(.22,.61,.36,1),border-color 0.25s,transform 0.22s cubic-bezier(.22,.61,.36,1),filter 0.22s;}
+[data-interactive]:hover{box-shadow:0 8px 24px rgba(100,80,50,0.08);border-color:rgba(184,118,58,0.5);transform:translateY(-1px);filter:brightness(1.02);}
+.surface.dense[data-interactive]:hover{transform:none;filter:none;}
+.surface.reflective[data-interactive]:hover{background:rgba(255,255,255,0.07);transform:none;filter:none;box-shadow:none;border-color:transparent;}
+
+/* TYPOGRAPHY */
+.entry-prompt{font-family:'Crimson Text',serif;font-style:italic;font-size:1.18rem;color:var(--ink);line-height:1.7;margin-bottom:0.5rem;}
+.entry-note{font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-soft);margin-bottom:1.3rem;line-height:1.55;}
+.surface-rule{height:1px;background:var(--divider);margin:1.4rem 0;}
+.thinking-area{width:100%;min-height:110px;background:rgba(255,255,255,0.45);border:1px solid var(--divider);border-radius:4px;padding:0.85rem 1rem;font-family:'Crimson Text',serif;font-size:1.05rem;color:var(--ink);line-height:1.8;resize:vertical;outline:none;transition:border-color 0.18s,background 0.18s;background-image:repeating-linear-gradient(transparent,transparent 42px,rgba(213,202,188,0.25) 42px,rgba(213,202,188,0.25) 43px);background-attachment:local;}
+.thinking-area:focus{border-color:var(--ochre);background-color:rgba(255,255,255,0.6);}
+.thinking-area::placeholder{color:var(--ink-soft);font-style:italic;opacity:0.65;}
+.word-count{font-family:'Source Sans 3',sans-serif;font-size:0.7rem;color:var(--ink-soft);text-align:right;margin-top:0.3rem;}
+.literary-quote{font-family:'Crimson Text',serif;font-style:italic;font-size:1.2rem;color:var(--ink);line-height:1.75;padding:1.1rem 1.4rem;border-left:2.5px solid var(--ochre);background:rgba(255,255,255,0.28);border-radius:0 4px 4px 0;margin-bottom:1.2rem;}
+.quote-attr{font-family:'Source Sans 3',sans-serif;font-size:0.72rem;color:var(--ink-soft);margin-top:0.4rem;}
+
+/* GROUPING */
+.drag-bank{display:flex;flex-wrap:wrap;gap:0.55rem;padding:1rem;background:rgba(255,255,255,0.22);border:1px dashed var(--divider);border-radius:4px;margin-bottom:1.2rem;min-height:54px;}
+.drag-token{background:var(--beige);border:1px solid var(--divider);border-radius:3px;padding:0.28rem 0.8rem;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--ink-mid);cursor:pointer;user-select:none;transition:all 0.14s;box-shadow:0 1px 2px var(--shadow-warm);}
+.drag-token:hover{background:var(--parchment);border-color:var(--ochre);color:var(--ink);}
+.drag-token.in-a{background:rgba(184,118,58,0.15);border-color:var(--ochre);color:var(--ink);}
+.drag-token.in-b{background:rgba(106,140,114,0.15);border-color:var(--sage);color:var(--ink);}
+.group-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.4rem;}
+.group-bin{background:rgba(255,255,255,0.38);border:1.5px dashed var(--divider);border-radius:4px;padding:0.85rem 1rem;min-height:90px;transition:border-color 0.16s;}
+.group-bin-label{font-family:'Source Sans 3',sans-serif;font-size:0.68rem;text-transform:uppercase;letter-spacing:0.14em;color:var(--sage);margin-bottom:0.6rem;}
+.bin-items{display:flex;flex-wrap:wrap;gap:0.35rem;min-height:2rem;}
+
+/* RANKING */
+.rank-list{list-style:none;}
+.rank-item{display:flex;align-items:center;gap:0.7rem;padding:0.85rem 1rem;background:rgba(255,255,255,0.44);border:1px solid var(--divider);border-radius:4px;margin-bottom:0.6rem;cursor:pointer;font-family:'Crimson Text',serif;font-size:1rem;color:var(--ink);user-select:none;transition:box-shadow 0.22s,opacity 0.18s;}
+.rank-item:hover{box-shadow:0 3px 10px var(--shadow-mid);}
+.rank-item.selected{border-color:var(--ochre);background:rgba(184,118,58,0.10);}
+.rank-handle{color:var(--divider);font-size:0.9rem;flex-shrink:0;}
+.rank-num{font-family:'Source Sans 3',sans-serif;font-size:0.68rem;color:var(--ochre);min-width:1.1rem;}
+
+/* CHARACTER MAP */
+.char-map{display:grid;grid-template-columns:repeat(3,1fr);gap:0.65rem;margin-bottom:0.8rem;}
+.char-node{background:rgba(255,255,255,0.38);border:1px solid var(--divider);border-radius:5px;padding:0.9rem 0.7rem;text-align:center;cursor:pointer;transition:all 0.16s;}
+.char-node:hover{border-color:var(--sage);box-shadow:0 2px 8px var(--shadow-warm);}
+.char-node.selected{border-color:var(--ochre);background:rgba(184,118,58,0.08);}
+.char-node-name{font-family:'Crimson Text',serif;font-style:italic;font-size:1rem;color:var(--ink);display:block;margin-bottom:0.15rem;}
+.char-node-word{font-family:'Source Sans 3',sans-serif;font-size:0.68rem;color:var(--sage);letter-spacing:0.07em;}
+.char-expand{background:rgba(255,255,255,0.32);border:1px solid var(--divider);border-radius:4px;padding:0 1.4rem;margin-top:0.4rem;max-height:0;overflow:hidden;opacity:0;transition:max-height 0.32s cubic-bezier(.22,.61,.36,1),opacity 0.24s ease,padding 0.24s ease;}
+.char-expand.open{max-height:700px;opacity:1;padding:1.2rem 1.4rem;}
+.char-expand-name{font-family:'Crimson Text',serif;font-style:italic;font-size:1.12rem;color:var(--ink);margin-bottom:0.6rem;}
+.char-expand p{font-family:'Source Sans 3',sans-serif;font-size:0.87rem;color:var(--ink-mid);line-height:1.7;margin-bottom:0.55rem;}
+.char-thinking{font-family:'Crimson Text',serif;font-style:italic;font-size:0.92rem;color:var(--ink-soft);border-top:1px solid var(--divider);padding-top:0.65rem;margin-top:0.4rem;}
+/* Character discussion prompt that appears on expand */
+.char-discuss{margin-top:0.8rem;}
+.char-discuss textarea{min-height:70px;}
+
+/* WORD MARKING */
+.word-cloud{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;}
+.w-item{padding:0.3rem 0.85rem;border-radius:3px;font-family:'Crimson Text',serif;font-style:italic;cursor:pointer;border:1.5px solid var(--divider);color:var(--ink);transition:all 0.16s;background:rgba(255,255,255,0.32);}
+.w-item.mark-a{background:var(--ochre);color:white;border-color:#9a5f28;}
+.w-item.mark-b{background:var(--sage);color:white;border-color:#4e6e56;}
+.w-item.mark-c{background:var(--denim);color:white;border-color:#506070;}
+.mark-legend{display:flex;gap:1.1rem;flex-wrap:wrap;margin-top:0.5rem;}
+.mark-legend-item{display:flex;align-items:center;gap:0.4rem;font-family:'Source Sans 3',sans-serif;font-size:0.73rem;color:var(--ink-soft);padding:0.2rem 0.5rem 0.2rem 0.3rem;border-radius:3px;border:1px solid transparent;}
+.mark-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* MOMENT CARDS */
+.moment-cards{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:1.2rem;}
+.moment-card{background:rgba(255,255,255,0.38);border:1px solid var(--divider);border-radius:5px;padding:1rem 1.1rem;cursor:pointer;transition:all 0.16s;}
+.moment-card:hover{border-color:var(--sage);}
+.moment-card.held{border-color:var(--ochre);background:rgba(184,118,58,0.07);}
+.moment-card p{font-family:'Crimson Text',serif;font-style:italic;font-size:0.9rem;color:var(--ink);line-height:1.62;}
+.moment-label{font-family:'Source Sans 3',sans-serif;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ochre);margin-bottom:0.35rem;}
+
+/* PAUSE */
+.pause-screen{text-align:center;padding:3rem 1rem 2.5rem;}
+.pause-word{font-family:'Crimson Text',serif;font-style:italic;font-size:2.1rem;color:var(--ink);display:block;margin-bottom:0.75rem;}
+.pause-screen>p{font-family:'Source Sans 3',sans-serif;font-size:0.87rem;color:var(--ink-soft);max-width:420px;margin:0 auto;line-height:1.65;}
+
+/* SPECTRUM */
+.spectrum-label-row{display:flex;justify-content:space-between;font-family:'Source Sans 3',sans-serif;font-size:0.7rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.55rem;}
+.spectrum-wrap{position:relative;margin-bottom:1.4rem;}
+.spectrum-track{height:6px;background:linear-gradient(90deg,var(--barn),var(--divider) 50%,var(--sage));border-radius:3px;}
+.spectrum-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:transparent;position:absolute;top:0;left:0;cursor:pointer;outline:none;}
+.spectrum-slider::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--parchment);border:2.5px solid var(--ochre);box-shadow:0 2px 6px var(--shadow-mid);cursor:pointer;transition:transform 0.12s;}
+.spectrum-slider::-webkit-slider-thumb:hover{transform:scale(1.18);}
+.spectrum-reading{font-family:'Source Sans 3',sans-serif;font-size:0.78rem;color:var(--ink-soft);text-align:center;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:1rem;}
+
+/* STEMS */
+.stem-row{display:flex;align-items:baseline;gap:0.45rem;margin-bottom:0.85rem;flex-wrap:wrap;}
+.stem-fixed{font-family:'Crimson Text',serif;font-style:italic;font-size:1.02rem;color:var(--ink-mid);white-space:nowrap;}
+.stem-input{flex:1;min-width:200px;border:none;border-bottom:1px solid var(--divider);background:transparent;font-family:'Crimson Text',serif;font-size:1.02rem;color:var(--ink);outline:none;padding:0.15rem 0.15rem 0.12rem;transition:border-color 0.18s;}
+.stem-input:focus{border-bottom-color:var(--ochre);}
+.stem-input::placeholder{color:var(--ink-soft);font-style:italic;opacity:0.5;}
+
+/* COLLAGE */
+.collage-zone{max-width:640px;margin:0 auto 3rem;padding:2.5rem 0;border-top:1px solid var(--divider);border-bottom:1px solid var(--divider);}
+.collage-wall{display:flex;flex-wrap:wrap;gap:0.45rem;min-height:56px;padding:0.85rem;border:1px dashed var(--divider);border-radius:4px;margin-bottom:0.6rem;}
+.collage-add-row{display:flex;gap:0.55rem;align-items:center;}
+.collage-input{flex:1;border:1px solid var(--divider);background:rgba(255,255,255,0.4);border-radius:3px;padding:0.38rem 0.7rem;font-family:'Crimson Text',serif;font-size:0.95rem;color:var(--ink);outline:none;}
+.collage-input:focus{border-color:var(--ochre);}
+.c-tag{background:var(--beige);border:1px solid var(--divider);border-radius:3px;padding:0.25rem 0.62rem;font-family:'Crimson Text',serif;font-style:italic;font-size:0.9rem;color:var(--ink);cursor:pointer;transition:all 0.14s;}
+.c-tag:hover{background:var(--parchment);}
+
+/* STILL POINT */
+.still-point{border:1px solid var(--divider);border-radius:5px;padding:2.5rem 2rem;text-align:center;background:rgba(255,255,255,0.2);margin-bottom:3rem;max-width:640px;margin-inline:auto;}
+.sp-quote{font-family:'Crimson Text',serif;font-style:italic;font-size:1.22rem;color:var(--ink);line-height:1.72;margin-bottom:0.9rem;}
+.sp-note{font-family:'Source Sans 3',sans-serif;font-size:0.77rem;color:var(--ink-soft);}
+
+/* SVG ILLUSTRATIONS */
+.illus-wrap{margin:1.8rem 0;display:flex;justify-content:center;}
+.illus-wrap svg{max-width:100%;height:auto;opacity:0.88;}
+.illus-caption{font-family:'Source Sans 3',sans-serif;font-size:0.7rem;color:var(--ink-soft);text-align:center;letter-spacing:0.06em;margin-top:0.5rem;font-style:italic;}
+
+/* FOOTER */
+footer{max-width:720px;margin:0 auto;padding:1.4rem 2rem;border-top:1px solid var(--divider);font-family:'Source Sans 3',sans-serif;font-size:0.7rem;color:var(--ink-soft);letter-spacing:0.05em;display:flex;justify-content:space-between;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--divider);border-radius:2px;}
+
+/* ===== ZONE 7 — PRESENTATION ===== */
+.pres-step{margin-bottom:2.4rem;}
+.pres-step-label{font-family:'Source Sans 3',sans-serif;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ochre);margin-bottom:0.5rem;}
+.pres-step-heading{font-family:'Crimson Text',serif;font-style:italic;font-size:1.22rem;color:var(--ink);margin-bottom:0.4rem;line-height:1.4;}
+.pres-step-note{font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-soft);margin-bottom:1rem;line-height:1.55;}
+.starter-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:1rem;}
+.starter-chip{background:rgba(255,255,255,0.44);border:1px solid var(--divider);border-radius:4px;padding:0.55rem 0.8rem;font-family:'Crimson Text',serif;font-style:italic;font-size:0.9rem;color:var(--ink-mid);cursor:pointer;transition:all 0.15s;line-height:1.45;}
+.starter-chip:hover{border-color:var(--ochre);color:var(--ink);background:rgba(184,118,58,0.06);}
+.starter-chip.picked{border-color:var(--ochre);background:rgba(184,118,58,0.1);color:var(--ink);}
+/* reminder card */
+.reminder-card{background:var(--surface-alt);border:1.5px solid var(--divider);border-radius:5px;padding:1.8rem 2rem;margin-top:2rem;}
+.reminder-card-title{font-family:'Source Sans 3',sans-serif;font-size:0.68rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--ochre);margin-bottom:1.2rem;}
+.reminder-row{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--divider);}
+.reminder-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.reminder-num{font-family:'Crimson Text',serif;font-size:1.5rem;color:var(--ochre);font-style:italic;line-height:1;flex-shrink:0;width:1.6rem;}
+.reminder-body{}
+.reminder-label{font-family:'Source Sans 3',sans-serif;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:0.2rem;}
+.reminder-text{font-family:'Crimson Text',serif;font-style:italic;font-size:0.95rem;color:var(--ink);line-height:1.55;}
+.reminder-preview{font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-soft);margin-top:0.2rem;font-style:normal;}
+.print-btn{background:none;border:1px solid var(--divider);border-radius:4px;padding:0.5rem 1.1rem;font-family:'Source Sans 3',sans-serif;font-size:0.78rem;color:var(--ink-soft);cursor:pointer;letter-spacing:0.05em;transition:all 0.15s;margin-top:1.4rem;}
+.print-btn:hover{border-color:var(--ochre);color:var(--ink);}
+/* angle picker */
+.angle-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.65rem;margin-bottom:1.2rem;}
+.angle-card{background:rgba(255,255,255,0.38);border:1.5px solid var(--divider);border-radius:5px;padding:1rem 1.1rem;cursor:pointer;transition:all 0.16s;}
+.angle-card:hover{border-color:var(--sage);}
+.angle-card.chosen{border-color:var(--ochre);background:rgba(184,118,58,0.08);}
+.angle-card-label{font-family:'Source Sans 3',sans-serif;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ochre);margin-bottom:0.3rem;}
+.angle-card p{font-family:'Crimson Text',serif;font-style:italic;font-size:0.9rem;color:var(--ink);line-height:1.55;}
+
+/* PRINT */
+@media print{
+  .zone-nav-wrap,.masthead-byline,footer,.print-btn{display:none!important;}
+  body{background:white;font-size:13px;}
+  main{padding:0;}
+  .zone{display:block!important;}
+  .zone:not(#z7){display:none!important;}
+  #z7{display:block!important;padding-top:1rem;}
+  .reminder-card{border:1.5px solid #ccc;break-inside:avoid;}
+  .surface.open,.surface.reflective,.pres-step .thinking-area,.starter-grid,.angle-grid{display:none!important;}
+  .reminder-card,.reminder-card *{color:#000!important;}
+  .zone-title,.zone-subtitle,.zone-teacher-note{display:none!important;}
 }
-header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:4px; background:linear-gradient(to right, var(--straw), #e8c96a, var(--straw)); }
-.web-svg { position:absolute; top:0; right:30px; width:130px; height:130px; opacity:0.15; }
-header h1 { font-family:'Playfair Display',serif; font-size:clamp(2.4rem,6vw,4rem); color:var(--cream); font-style:italic; text-shadow:2px 4px 12px rgba(0,0,0,0.35); line-height:1.1; }
-header p.sub { color:rgba(245,240,228,0.72); font-size:0.92rem; margin-top:0.6rem; letter-spacing:0.14em; text-transform:uppercase; }
 
-nav { background:var(--barn-dark); display:flex; flex-wrap:wrap; justify-content:center; border-bottom:3px solid var(--straw); position:sticky; top:0; z-index:200; box-shadow:0 3px 14px rgba(44,36,22,0.22); }
-nav button { background:none; border:none; color:rgba(245,240,228,0.7); font-family:'Lora',serif; font-size:0.8rem; padding:0.8rem 1rem; cursor:pointer; letter-spacing:0.07em; transition:all 0.2s; border-bottom:3px solid transparent; margin-bottom:-3px; white-space:nowrap; }
-nav button:hover, nav button.active { color:var(--straw); border-bottom-color:var(--straw); background:rgba(255,255,255,0.06); }
-
-main { max-width:920px; margin:0 auto; padding:2.5rem 1.5rem 5rem; }
-.section { display:none; animation:fadeUp 0.35s ease; }
-.section.active { display:block; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
-
-.sec-title { font-family:'Playfair Display',serif; font-size:2rem; color:var(--barn); font-style:italic; margin-bottom:0.3rem; }
-.sec-rule { height:2px; background:linear-gradient(to right, var(--straw) 0%, transparent 100%); margin-bottom:2rem; }
-
-.card { background:#faf7f1; border:1px solid rgba(44,36,22,0.1); border-radius:5px; padding:1.4rem 1.6rem; margin-bottom:1.2rem; box-shadow:0 2px 8px rgba(44,36,22,0.06); position:relative; }
-.card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:5px 0 0 5px; background:var(--meadow); }
-.card.red::before { background:var(--barn); }
-.card.straw::before { background:var(--straw); }
-.card.grey::before { background:#999; }
-.card h3 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:0.5rem; }
-.card p, .card li { font-size:0.94rem; line-height:1.75; color:var(--ink-light); }
-.card ul { padding-left:1.3rem; }
-.card li { margin-bottom:0.3rem; }
-
-.chapter { border:1px solid rgba(44,36,22,0.1); border-radius:5px; margin-bottom:0.7rem; overflow:hidden; }
-.chapter-head { background:var(--parchment); padding:0.95rem 1.4rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background 0.2s; user-select:none; }
-.chapter-head:hover { background:#e5dcc4; }
-.chapter-head .ch-label { font-family:'Playfair Display',serif; font-size:1rem; font-style:italic; }
-.chapter-head .ch-num { font-size:0.78rem; color:var(--barn); letter-spacing:0.1em; font-weight:600; text-transform:uppercase; }
-.chapter-head .ch-arrow { font-size:0.8rem; color:var(--barn); transition:transform 0.25s; }
-.chapter-body { display:none; padding:1.2rem 1.6rem; background:#faf7f1; border-top:1px solid rgba(44,36,22,0.08); }
-.chapter-body.open { display:block; }
-.chapter-body p { font-size:0.93rem; line-height:1.75; color:var(--ink-light); margin-bottom:0.8rem; }
-.chapter-body .key-moment { background:rgba(74,124,89,0.1); border-left:3px solid var(--meadow); padding:0.7rem 1rem; border-radius:0 4px 4px 0; font-size:0.88rem; font-style:italic; color:var(--meadow); margin-bottom:0.8rem; }
-
-.reveal-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; margin-bottom:1.5rem; }
-.reveal-card { background:var(--barn); border-radius:6px; padding:1.2rem; cursor:pointer; text-align:center; transition:transform 0.2s, box-shadow 0.2s; min-height:110px; display:flex; align-items:center; justify-content:center; }
-.reveal-card:hover { transform:translateY(-3px); box-shadow:0 6px 18px rgba(44,36,22,0.18); }
-.reveal-card .front { font-family:'Playfair Display',serif; color:var(--straw); font-size:1rem; font-style:italic; }
-.reveal-card .back { display:none; font-size:0.87rem; color:var(--cream); line-height:1.6; }
-.reveal-card.revealed .front { display:none; }
-.reveal-card.revealed .back { display:block; }
-.reveal-card.revealed { background:var(--meadow); cursor:default; transform:none; }
-
-.quiz-block { background:#faf7f1; border:1px solid rgba(44,36,22,0.1); border-radius:6px; padding:1.5rem 1.6rem; margin-bottom:1.4rem; }
-.quiz-block .q-text { font-family:'Playfair Display',serif; font-size:1.05rem; margin-bottom:1rem; font-style:italic; }
-.q-options { display:flex; flex-direction:column; gap:0.5rem; }
-.q-option { background:var(--parchment); border:1.5px solid rgba(44,36,22,0.12); border-radius:4px; padding:0.65rem 1rem; cursor:pointer; font-size:0.9rem; transition:all 0.18s; text-align:left; font-family:'Lora',serif; color:var(--ink); }
-.q-option:hover:not(.locked) { background:#e5dcc4; border-color:var(--straw); }
-.q-option.correct { background:rgba(74,124,89,0.15); border-color:var(--meadow); color:var(--meadow); }
-.q-option.wrong { background:rgba(139,44,44,0.12); border-color:var(--barn); color:var(--barn); }
-.q-feedback { margin-top:0.8rem; font-size:0.88rem; font-style:italic; padding:0.6rem 0.9rem; border-radius:4px; display:none; }
-.q-feedback.show { display:block; }
-.q-feedback.correct { background:rgba(74,124,89,0.12); color:var(--meadow); }
-.q-feedback.wrong { background:rgba(139,44,44,0.1); color:var(--barn); }
-
-.discussion-prompt { background:linear-gradient(135deg,#faf7f1,var(--parchment)); border:1px solid rgba(44,36,22,0.1); border-radius:6px; padding:1.4rem 1.6rem; margin-bottom:1.2rem; position:relative; }
-.discussion-prompt::before { content:'"'; position:absolute; top:-0.3rem; left:0.9rem; font-size:4rem; color:var(--straw); opacity:0.4; font-family:'Playfair Display',serif; line-height:1; }
-.discussion-prompt p { font-size:1rem; line-height:1.7; padding-left:0.5rem; color:var(--ink); }
-.discussion-prompt .prompt-tag { display:inline-block; background:var(--straw); color:white; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.2rem 0.6rem; border-radius:3px; margin-bottom:0.6rem; }
-
-.match-container { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem; }
-.match-col h4 { font-family:'Playfair Display',serif; font-size:0.95rem; color:var(--barn); margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.08em; }
-.draggable { background:var(--barn); color:var(--cream); padding:0.65rem 0.9rem; border-radius:4px; margin-bottom:0.5rem; cursor:grab; font-size:0.88rem; transition:opacity 0.2s, transform 0.15s; user-select:none; }
-.draggable:active { cursor:grabbing; transform:scale(1.03); }
-.draggable.dragging { opacity:0.4; }
-.drop-zone { min-height:52px; border:2px dashed rgba(44,36,22,0.2); border-radius:4px; padding:0.5rem 0.8rem; margin-bottom:0.5rem; font-size:0.85rem; color:var(--ink-light); display:flex; align-items:center; transition:background 0.2s, border-color 0.2s; }
-.drop-zone.drag-over { background:rgba(74,124,89,0.08); border-color:var(--meadow); }
-.drop-zone.matched-correct { background:rgba(74,124,89,0.12); border-color:var(--meadow); border-style:solid; }
-.drop-zone.matched-wrong { background:rgba(139,44,44,0.1); border-color:var(--barn); border-style:solid; }
-.drop-zone .zone-label { font-style:italic; color:rgba(44,36,22,0.4); font-size:0.82rem; }
-.match-btn { background:var(--barn); color:var(--cream); border:none; border-radius:4px; padding:0.65rem 1.4rem; font-family:'Lora',serif; font-size:0.9rem; cursor:pointer; transition:background 0.2s; margin-right:0.6rem; margin-bottom:0.6rem; }
-.match-btn:hover { background:var(--barn-dark); }
-.reset-btn { background:#888; color:white; border:none; border-radius:4px; padding:0.65rem 1.4rem; font-family:'Lora',serif; font-size:0.9rem; cursor:pointer; margin-bottom:0.6rem; }
-.reset-btn:hover { background:#666; }
-.match-result { margin-top:0.8rem; font-size:0.9rem; font-style:italic; color:var(--ink-light); }
-
-.pres-task { background:var(--barn); color:var(--cream); border-radius:6px; padding:1.6rem 1.8rem; margin-bottom:1.2rem; }
-.pres-task h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--straw); margin-bottom:0.7rem; }
-.pres-task p, .pres-task li { font-size:0.93rem; line-height:1.75; color:rgba(245,240,228,0.88); }
-.pres-task ul { padding-left:1.3rem; }
-.pres-task li { margin-bottom:0.4rem; }
-
-.gw-note { background:var(--parchment); border:1px dashed rgba(44,36,22,0.2); border-radius:5px; padding:1rem 1.3rem; font-size:0.84rem; color:var(--ink-light); font-style:italic; margin-bottom:1.5rem; text-align:center; }
-.illustration { background:var(--parchment); border:2px solid rgba(44,36,22,0.12); border-radius:6px; padding:2rem; text-align:center; margin:1.2rem 0; font-style:italic; color:rgba(44,36,22,0.4); font-size:0.88rem; }
-.illustration .ill-title { font-family:'Playfair Display',serif; font-size:1rem; color:var(--ink-light); margin-bottom:0.3rem; font-style:italic; }
-
-@media (max-width:600px) { .match-container { grid-template-columns:1fr; } .reveal-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:580px){
+  .masthead{padding:2.5rem 1.3rem 1.8rem;}
+  main{padding:0 1.3rem 4rem;}
+  .zone-btn{padding:0.7rem 0.8rem 0.6rem;}
+  .group-grid{grid-template-columns:1fr;}
+  .char-map{grid-template-columns:1fr 1fr;}
+  .moment-cards{grid-template-columns:1fr;}
+  .surface{padding:1.4rem 1.3rem;}
+}
 </style>
 </head>
 <body>
 
-<header>
-  <svg class="web-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="45" stroke="white" stroke-width="0.8"/>
-    <circle cx="50" cy="50" r="30" stroke="white" stroke-width="0.8"/>
-    <circle cx="50" cy="50" r="15" stroke="white" stroke-width="0.8"/>
-    <line x1="50" y1="5" x2="50" y2="95" stroke="white" stroke-width="0.6"/>
-    <line x1="5" y1="50" x2="95" y2="50" stroke="white" stroke-width="0.6"/>
-    <line x1="18" y1="18" x2="82" y2="82" stroke="white" stroke-width="0.6"/>
-    <line x1="82" y1="18" x2="18" y2="82" stroke="white" stroke-width="0.6"/>
-    <line x1="5" y1="30" x2="95" y2="70" stroke="white" stroke-width="0.4"/>
-    <line x1="5" y1="70" x2="95" y2="30" stroke="white" stroke-width="0.4"/>
-    <circle cx="50" cy="50" r="3" fill="white"/>
+<!-- MASTHEAD -->
+<div class="masthead">
+  <svg class="masthead-web" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="46" stroke="#2B2520" stroke-width="0.8"/>
+    <circle cx="50" cy="50" r="32" stroke="#2B2520" stroke-width="0.7"/>
+    <circle cx="50" cy="50" r="18" stroke="#2B2520" stroke-width="0.7"/>
+    <circle cx="50" cy="50" r="6"  stroke="#2B2520" stroke-width="0.6"/>
+    <line x1="50" y1="4"  x2="50" y2="96" stroke="#2B2520" stroke-width="0.55"/>
+    <line x1="4"  y1="50" x2="96" y2="50" stroke="#2B2520" stroke-width="0.55"/>
+    <line x1="17" y1="17" x2="83" y2="83" stroke="#2B2520" stroke-width="0.55"/>
+    <line x1="83" y1="17" x2="17" y2="83" stroke="#2B2520" stroke-width="0.55"/>
+    <line x1="4"  y1="29" x2="96" y2="71" stroke="#2B2520" stroke-width="0.4"/>
+    <line x1="4"  y1="71" x2="96" y2="29" stroke="#2B2520" stroke-width="0.4"/>
   </svg>
+  <div class="masthead-label">A Reading Journey</div>
+  <div class="masthead-rule"></div>
   <h1>Charlotte's Web</h1>
-  <p class="sub">E.B. White &nbsp;·&nbsp; Illustrated by Garth Williams &nbsp;·&nbsp; An Interactive Lesson</p>
-</header>
+  <div class="masthead-author">E.B. White &nbsp;·&nbsp; illustrated by Garth Williams</div>
+  <div class="masthead-byline">Six zones of thinking &nbsp;·&nbsp; Grade 6 &nbsp;·&nbsp; Explore in any order</div>
+</div>
 
-<nav id="main-nav">
-  <button class="active" onclick="showSection('overview')">Overview</button>
-  <button onclick="showSection('part1')">Part 1: The Farm</button>
-  <button onclick="showSection('part2')">Part 2: The Fair</button>
-  <button onclick="showSection('part3')">Part 3: Charlotte's Gift</button>
-  <button onclick="showSection('themes')">Themes</button>
-  <button onclick="showSection('characters')">Characters</button>
-  <button onclick="showSection('quiz')">Quiz</button>
-  <button onclick="showSection('discussion')">Discussion</button>
-  <button onclick="showSection('match')">Matching</button>
-  <button onclick="showSection('presentation')">Your Presentation</button>
-</nav>
+<!-- ZONE NAV -->
+<div class="zone-nav-wrap">
+  <nav class="zone-nav">
+    <button class="zone-btn active" onclick="setZone('z1')"><span class="zone-num">one</span>Before Breakfast</button>
+    <button class="zone-btn" onclick="setZone('z2')"><span class="zone-num">two</span>Some Pig</button>
+    <button class="zone-btn" onclick="setZone('z3')"><span class="zone-num">three</span>The Barn</button>
+    <button class="zone-btn" onclick="setZone('z4')"><span class="zone-num">four</span>What Charlotte Does</button>
+    <button class="zone-btn" onclick="setZone('z5')"><span class="zone-num">five</span>Things That Change</button>
+    <button class="zone-btn" onclick="setZone('z6')"><span class="zone-num">six</span>What Stays With Us</button>
+    <button class="zone-btn" onclick="setZone('z7')"><span class="zone-num">seven</span>Your Presentation</button>
+  </nav>
+</div>
 
 <main>
 
-<!-- OVERVIEW -->
-<section id="overview" class="section active">
-  <h2 class="sec-title">Welcome to the barn.</h2>
-  <div class="sec-rule"></div>
+<!-- ═══════════════════════════ ZONE 1 ═══════════════════════════ -->
+<div id="z1" class="zone active">
+  <div class="zone-title">Before Breakfast</div>
+  <div class="zone-subtitle">Early reading · Zone One</div>
+  <div class="zone-teacher-note">Open zone. Fern's argument in Chapter 1 is the moral trigger for everything that follows. The grouping uses short, genuinely ambiguous phrases — expect disagreement, and treat it as the point. No right answers anywhere here.</div>
 
-  <div class="gw-note">
-    ✦ All illustration notes in this lesson refer to artwork by <strong>Garth Williams</strong> (1912–1996), whose pencil drawings first brought Wilbur, Charlotte, and the Zuckerman farm to life in 1952.
-  </div>
-
-  <div class="illustration">
-    <div class="ill-title">Garth Williams — Wilbur at the barn door</div>
-    <em>A small, round pig standing in the doorway of a timber barn. Morning light, loose straw, the smell of the farm just waking up.</em>
-  </div>
-
-  <div class="card">
-    <h3>About the Book</h3>
-    <p><em>Charlotte's Web</em> was written by E.B. White and published in 1952. It is set on a farm in Maine, USA. It tells the story of a pig named Wilbur who is saved from slaughter — first by a little girl named Fern, and then by an extraordinary spider named Charlotte A. Cavatica.</p>
-  </div>
-
-  <div class="card red">
-    <h3>The Central Question</h3>
-    <p>The whole novel asks one quiet but powerful question: <strong>What does it mean to have a true friend?</strong> Charlotte gives Wilbur everything — her words, her energy, and finally her life. What does that cost her? What does it mean?</p>
-  </div>
-
-  <div class="card straw">
-    <h3>What We're Doing Today</h3>
-    <ul>
-      <li>Going through the whole story — plot, characters, key moments</li>
-      <li>Exploring the big themes: friendship, death, language, nature</li>
-      <li>Testing your understanding with quizzes and matching activities</li>
-      <li>Discussing the parts that matter most</li>
-      <li>Preparing for your class presentations</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h3>How to Use This Lesson</h3>
-    <ul>
-      <li>Use the <strong>navigation bar</strong> at the top to move between sections</li>
-      <li>Click on chapter titles to expand them and read what happens</li>
-      <li>Click the <strong>dark cards</strong> in Themes to reveal ideas</li>
-      <li>Answer quiz questions — you'll get instant feedback</li>
-      <li>Drag and drop in the Matching section</li>
-    </ul>
-  </div>
-</section>
-
-<!-- PART 1 -->
-<section id="part1" class="section">
-  <h2 class="sec-title">Part One: The Farm</h2>
-  <div class="sec-rule"></div>
-  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Chapters 1–7 — Wilbur arrives. He finds the barn lonely. Then he finds Charlotte.</p>
-
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 1 &nbsp;</span><span class="ch-label">Before Breakfast</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>The novel opens before dawn. Fern Arable, age eight, hears that her father is going to kill the runt of a new litter of pigs. She runs out in her pyjamas and confronts him. <em>"If I had been very small at birth, would you have killed me?"</em> Her father has no answer. He hands her the piglet.</p>
-      <div class="key-moment">✦ Key moment: Fern's argument is pure moral logic. She sees no difference between the value of a pig's life and a human's. This is one of the quietly radical moments in the book.</div>
-      <p>She names the pig Wilbur and raises him like a baby — bottle-feeding him, pushing him in a pram. For five weeks, he is entirely hers.</p>
+  <!-- 1.1 OPEN — first encounter -->
+  <div class="surface open" style="padding-block:6rem;">
+    <div style="max-width:560px;margin:0 auto;text-align:center;">
+      <div class="entry-prompt" style="font-size:1.38rem;margin-bottom:1.2rem;">"If I had been very small at birth, would you have killed me?"</div>
+      <div class="entry-note" style="margin-bottom:2rem;">Eight-year-old Fern Arable. Standing in a field before sunrise, still in her pyjamas, facing her father who has an axe. This is the first sentence she speaks in the entire novel.</div>
+      <div class="surface-rule" style="max-width:400px;margin:0 auto 1.8rem;"></div>
+      <div class="entry-prompt" style="font-size:1.08rem;margin-bottom:0.5rem;">What do you notice about this question?</div>
+      <div class="entry-note" style="margin-bottom:1rem;">Not what it means. What you actually notice when you first read it.</div>
+      <textarea class="thinking-area" id="t1-1" style="max-width:480px;margin:0 auto;display:block;text-align:left;" placeholder="A few words is enough. Or a sentence. Or more." oninput="wc(this,'wc1-1')"></textarea>
+      <div class="word-count" id="wc1-1" style="max-width:480px;margin:0 auto;"></div>
     </div>
   </div>
 
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 2–3 &nbsp;</span><span class="ch-label">Wilbur Goes to the Farm / Escape</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>When Wilbur is five weeks old, he is sold to Fern's uncle, Homer Zuckerman, whose farm is nearby. Fern can still visit, but Wilbur now lives in a barn. He is bewildered and lonely.</p>
-      <p>He briefly escapes from his pen — causing chaos around the farmyard — before being lured back with a bucket of slop. His "freedom" is funny and sad. He doesn't know what to do with it.</p>
-      <div class="key-moment">✦ Key moment: Wilbur's escape shows how domesticated he already is. He is not wild. He needs shelter, food — and company.</div>
+  <!-- ILLUSTRATION 1: Fern and her father -->
+  <div class="illus-wrap">
+    <div>
+      <svg width="420" height="240" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <defs>
+          <filter id="ink1"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="0.7" xChannelSelector="R" yChannelSelector="G"/></filter>
+        </defs>
+        <!-- Ground / field -->
+        <path d="M0 195 Q105 185 210 190 Q315 195 420 188 L420 240 L0 240Z" fill="#c8b98a" opacity="0.35"/>
+        <!-- Grass tufts -->
+        <g stroke="#6a5a38" stroke-width="1.2" fill="none" opacity="0.5">
+          <path d="M30 195 Q32 188 34 195"/><path d="M34 193 Q36 186 38 193"/>
+          <path d="M80 192 Q82 185 84 192"/><path d="M155 193 Q157 186 159 193"/>
+          <path d="M260 191 Q262 184 264 191"/><path d="M340 193 Q342 186 344 193"/>
+          <path d="M390 194 Q392 187 394 194"/>
+        </g>
+        <!-- Father — tall, stooped slightly, axe handle -->
+        <g filter="url(#ink1)">
+          <!-- body -->
+          <rect x="268" y="108" width="18" height="52" rx="3" fill="none" stroke="#2B2520" stroke-width="1.6"/>
+          <!-- head -->
+          <ellipse cx="277" cy="100" rx="10" ry="11" fill="none" stroke="#2B2520" stroke-width="1.5"/>
+          <!-- cap -->
+          <path d="M267 97 Q277 90 287 97" fill="none" stroke="#2B2520" stroke-width="1.4"/>
+          <line x1="265" y1="97" x2="289" y2="97" stroke="#2B2520" stroke-width="1.2"/>
+          <!-- arm holding axe -->
+          <line x1="286" y1="120" x2="305" y2="138" stroke="#2B2520" stroke-width="1.5"/>
+          <!-- axe -->
+          <line x1="305" y1="138" x2="312" y2="160" stroke="#2B2520" stroke-width="1.8"/>
+          <path d="M305 138 Q318 132 316 145 Q310 148 305 138Z" fill="none" stroke="#2B2520" stroke-width="1.3"/>
+          <!-- legs -->
+          <line x1="272" y1="160" x2="268" y2="190" stroke="#2B2520" stroke-width="1.5"/>
+          <line x1="282" y1="160" x2="286" y2="190" stroke="#2B2520" stroke-width="1.5"/>
+          <!-- boots -->
+          <path d="M264 189 Q268 194 274 191" fill="none" stroke="#2B2520" stroke-width="1.5"/>
+          <path d="M283 189 Q287 194 293 191" fill="none" stroke="#2B2520" stroke-width="1.5"/>
+        </g>
+        <!-- Fern — small, pyjamas, facing father -->
+        <g filter="url(#ink1)">
+          <!-- body/nightgown -->
+          <path d="M130 128 Q122 155 118 190 Q130 192 136 190 Q138 165 134 150 Q140 165 142 190 Q148 192 154 190 Q150 155 142 128Z" fill="none" stroke="#2B2520" stroke-width="1.4"/>
+          <!-- head -->
+          <ellipse cx="136" cy="118" rx="9" ry="10" fill="none" stroke="#2B2520" stroke-width="1.5"/>
+          <!-- hair — loose, just woken up -->
+          <path d="M127 112 Q124 104 130 108" fill="none" stroke="#2B2520" stroke-width="1.1"/>
+          <path d="M145 112 Q148 104 142 108" fill="none" stroke="#2B2520" stroke-width="1.1"/>
+          <path d="M128 108 Q136 100 144 108" fill="none" stroke="#2B2520" stroke-width="1.1"/>
+          <!-- arms raised, pleading -->
+          <line x1="130" y1="135" x2="112" y2="148" stroke="#2B2520" stroke-width="1.4"/>
+          <line x1="142" y1="135" x2="158" y2="146" stroke="#2B2520" stroke-width="1.4"/>
+          <!-- feet/bare -->
+          <path d="M115 189 Q118 194 124 191" fill="none" stroke="#2B2520" stroke-width="1.3"/>
+          <path d="M140 189 Q143 194 149 191" fill="none" stroke="#2B2520" stroke-width="1.3"/>
+        </g>
+        <!-- Dawn sky suggestion — horizon line -->
+        <line x1="0" y1="148" x2="420" y2="148" stroke="#c8b98a" stroke-width="0.6" opacity="0.4"/>
+        <!-- Barn silhouette far background -->
+        <g opacity="0.18" fill="#2B2520">
+          <rect x="340" y="110" width="55" height="45"/>
+          <polygon points="337,110 395,110 366,85"/>
+          <rect x="358" y="128" width="14" height="27"/>
+        </g>
+      </svg>
+      <div class="illus-caption">Fern faces her father in the field — Chapter 1</div>
     </div>
   </div>
 
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 4–5 &nbsp;</span><span class="ch-label">Loneliness / Charlotte</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>Wilbur asks the farm animals to play with him — the goose is too busy with eggs; the lamb refuses. <em>"I'm less than two months old and I'm tired of living."</em> He is genuinely miserable.</p>
-      <div class="illustration">
-        <div class="ill-title">Garth Williams — Charlotte in her web</div>
-        <em>A grey spider at the centre of her web in the upper corner of the barn doorway. The web catches a thin slant of morning light. Wilbur is asleep below.</em>
+  <!-- 1.2 LIGHT — the argument (FIXED: short tokens, genuinely porous categories) -->
+  <div class="surface light" data-interactive>
+    <div class="entry-prompt">Fern doesn't cry or beg. She makes an argument: if size at birth decides whether you live, the same rule should apply to her.</div>
+    <div class="entry-note">Her father has no answer. He hands over the pig.</div>
+    <div class="surface-rule"></div>
+    <div class="entry-prompt" style="font-size:1.05rem;">What is Fern doing? Place each phrase where it feels right.</div>
+    <div class="entry-note">Click a phrase to send it to a column. Click again to move it to the other column. Click a third time to return it. You can put everything in one column — that's a valid answer too.</div>
+    <div class="drag-bank" id="bank-1-2"></div>
+    <div class="group-grid">
+      <div class="group-bin" data-bin-key="a">
+        <div class="group-bin-label">She is making a logical argument —</div>
+        <div class="bin-items" id="bin-1a"></div>
       </div>
-      <p>Then a small voice: <em>"Do you want a friend, Wilbur? I'll be your friend. I've watched you all day and I like you."</em> It is Charlotte A. Cavatica — a large grey spider in the top of the doorway. Wilbur is horrified at first by what she eats. But friendship begins anyway.</p>
-      <div class="key-moment">✦ Key moment: Charlotte offers friendship freely, without conditions. She doesn't ask Wilbur to be different. This is the moral centre of the novel.</div>
-    </div>
-  </div>
-
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 6–7 &nbsp;</span><span class="ch-label">Summer Days / Bad News</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>Summer settles over the farm. Fern visits and sits quietly in the barn, listening to the animals as if she can almost understand them. Then the old sheep — always the voice of hard truth — tells Wilbur what no one else will: come Christmas, Mr Zuckerman is going to kill and eat him.</p>
-      <p>Wilbur panics. He cries and runs around in the mud. Charlotte calms him: <em>"I am going to save your life."</em> She doesn't yet know how. She just promises.</p>
-      <div class="key-moment">✦ Key moment: Charlotte makes an enormous promise without a plan. She commits to Wilbur before she has any idea what it will cost her. That is what makes her extraordinary.</div>
-    </div>
-  </div>
-
-  <div style="margin-top:2rem;">
-    <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--barn); margin-bottom:1rem;">✦ Check Your Understanding — Part 1</h3>
-    <div class="quiz-block">
-      <div class="q-text">1. Why does Fern's father decide not to kill the piglet?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">He wanted to sell it for money.</button>
-        <button class="q-option" onclick="checkAnswer(this,'correct')">Fern's moral argument moved him.</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">The pig was not actually the runt.</button>
+      <div class="group-bin" data-bin-key="b">
+        <div class="group-bin-label">She is following a feeling —</div>
+        <div class="bin-items" id="bin-1b"></div>
       </div>
-      <div class="q-feedback">Fern asks if her father would have killed <em>her</em> if she'd been born small. He has no answer to that — and hands the pig over.</div>
     </div>
-    <div class="quiz-block">
-      <div class="q-text">2. What is Charlotte's full name?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Charlotte A. Cobweb</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Charlotte E. Spinner</button>
-        <button class="q-option" onclick="checkAnswer(this,'correct')">Charlotte A. Cavatica</button>
+    <div style="margin-top:1.1rem;">
+      <div class="entry-prompt" style="font-size:0.97rem;">Her argument works. But why? Is it the logic, or something else?</div>
+      <textarea class="thinking-area" id="t1-2" style="min-height:80px;" placeholder="A word or a sentence is enough." oninput="wc(this,'wc1-2')"></textarea>
+      <div class="word-count" id="wc1-2"></div>
+    </div>
+  </div>
+
+  <!-- 1.3 OPEN — pause -->
+  <div class="surface open">
+    <div class="pause-screen">
+      <span class="pause-word">Fairness.</span>
+      <p>Fern treats an animal as if it deserves what a person deserves. The novel never stops asking whether she is right to do that — or whether it matters that she is.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════ ZONE 2 ═══════════════════════════ -->
+<div id="z2" class="zone">
+  <div class="zone-title">Some Pig</div>
+  <div class="zone-subtitle">Mid reading · Zone Two</div>
+  <div class="zone-teacher-note">Language and perception zone. The word-marking surface works best projected and marked together as a class before splitting into pairs. The four web-words are the spine of the novel's argument about language.</div>
+
+  <!-- 2.1 OPEN -->
+  <div class="surface open" style="padding-block:5rem;">
+    <div style="max-width:560px;margin:0 auto;text-align:center;">
+      <div class="entry-prompt" style="font-size:1.38rem;margin-bottom:0.9rem;">SOME PIG.</div>
+      <div class="entry-note" style="margin-bottom:1.4rem;">Two words in a spider's web. Mr Zuckerman finds them one morning above the pigpen. He is stunned. Word spreads. People come from miles away. No one questions it.</div>
+      <div class="surface-rule" style="max-width:400px;margin:0 auto 1.6rem;"></div>
+      <div class="entry-prompt" style="font-size:1.08rem;margin-bottom:0.5rem;">Wilbur has not changed. What has changed?</div>
+      <textarea class="thinking-area" id="t2-1" style="max-width:480px;margin:0 auto;display:block;text-align:left;" placeholder="Just your first thought." oninput="wc(this,'wc2-1')"></textarea>
+      <div class="word-count" id="wc2-1" style="max-width:480px;margin:0 auto;"></div>
+    </div>
+  </div>
+
+  <!-- ILLUSTRATION 2: Charlotte in her web -->
+  <div class="illus-wrap">
+    <div>
+      <svg width="380" height="260" viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="ink2"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0.8"/></filter></defs>
+        <!-- Barn beam / doorframe -->
+        <rect x="30" y="0" width="22" height="260" fill="none" stroke="#2B2520" stroke-width="2" opacity="0.5"/>
+        <rect x="328" y="0" width="22" height="260" fill="none" stroke="#2B2520" stroke-width="2" opacity="0.5"/>
+        <rect x="30" y="0" width="320" height="20" fill="none" stroke="#2B2520" stroke-width="2" opacity="0.5"/>
+        <!-- Wood grain on beams -->
+        <g stroke="#2B2520" stroke-width="0.5" opacity="0.25">
+          <line x1="34" y1="30" x2="48" y2="40"/><line x1="34" y1="55" x2="48" y2="62"/>
+          <line x1="34" y1="80" x2="48" y2="88"/><line x1="34" y1="120" x2="48" y2="128"/>
+          <line x1="334" y1="30" x2="348" y2="40"/><line x1="334" y1="70" x2="348" y2="78"/>
+        </g>
+        <!-- Web radial threads from top-centre -->
+        <g stroke="#2B2520" stroke-width="0.7" opacity="0.45" filter="url(#ink2)">
+          <line x1="190" y1="18" x2="190" y2="175"/>
+          <line x1="190" y1="18" x2="60"  y2="140"/>
+          <line x1="190" y1="18" x2="320" y2="140"/>
+          <line x1="190" y1="18" x2="95"  y2="175"/>
+          <line x1="190" y1="18" x2="285" y2="175"/>
+          <line x1="190" y1="18" x2="52"  y2="80"/>
+          <line x1="190" y1="18" x2="328" y2="80"/>
+          <line x1="190" y1="18" x2="100" y2="30"/>
+          <line x1="190" y1="18" x2="280" y2="30"/>
+        </g>
+        <!-- Web spiral threads -->
+        <g stroke="#2B2520" stroke-width="0.6" fill="none" opacity="0.4" filter="url(#ink2)">
+          <ellipse cx="190" cy="55"  rx="28"  ry="16"/>
+          <ellipse cx="190" cy="80"  rx="54"  ry="28"/>
+          <ellipse cx="190" cy="105" rx="80"  ry="42"/>
+          <ellipse cx="190" cy="130" rx="108" ry="56"/>
+          <ellipse cx="190" cy="155" rx="130" ry="66"/>
+        </g>
+        <!-- "SOME PIG" text woven into web -->
+        <text x="190" y="98" font-family="Georgia,serif" font-size="13" fill="#2B2520" text-anchor="middle" opacity="0.7" font-style="italic" letter-spacing="2">SOME PIG</text>
+        <!-- Charlotte — small spider body at web centre-top -->
+        <g filter="url(#ink2)" opacity="0.85">
+          <!-- abdomen -->
+          <ellipse cx="190" cy="30" rx="7" ry="9" fill="none" stroke="#2B2520" stroke-width="1.4"/>
+          <!-- cephalothorax -->
+          <ellipse cx="190" cy="22" rx="5" ry="5" fill="none" stroke="#2B2520" stroke-width="1.2"/>
+          <!-- legs — 4 pairs -->
+          <line x1="185" y1="24" x2="174" y2="16"/><line x1="174" y1="16" x2="166" y2="20"/>
+          <line x1="185" y1="26" x2="173" y2="22"/><line x1="173" y1="22" x2="164" y2="28"/>
+          <line x1="195" y1="24" x2="206" y2="16"/><line x1="206" y1="16" x2="214" y2="20"/>
+          <line x1="195" y1="26" x2="207" y2="22"/><line x1="207" y1="22" x2="216" y2="28"/>
+          <line x1="184" y1="29" x2="172" y2="30"/><line x1="172" y1="30" x2="163" y2="36"/>
+          <line x1="196" y1="29" x2="208" y2="30"/><line x1="208" y1="30" x2="217" y2="36"/>
+          <line x1="184" y1="33" x2="175" y2="38"/><line x1="175" y1="38" x2="168" y2="46"/>
+          <line x1="196" y1="33" x2="205" y2="38"/><line x1="205" y1="38" x2="212" y2="46"/>
+        </g>
+        <!-- Morning light rays -->
+        <g stroke="#c8a855" stroke-width="0.8" opacity="0.18">
+          <line x1="190" y1="0" x2="50" y2="200"/>
+          <line x1="190" y1="0" x2="190" y2="260"/>
+          <line x1="190" y1="0" x2="330" y2="200"/>
+        </g>
+      </svg>
+      <div class="illus-caption">Charlotte at the centre of her web — morning light through the barn door</div>
+    </div>
+  </div>
+
+  <!-- 2.2 DENSE — four words -->
+  <div class="surface dense" data-interactive>
+    <div class="entry-prompt">Charlotte weaves four words: SOME PIG · TERRIFIC · RADIANT · HUMBLE. The townspeople, unprompted, add a fifth.</div>
+    <div class="entry-note">Mark the words that feel surprising, important, or worth thinking about. The fifth word — MIRACULOUS — is never woven by Charlotte. It's what the humans decide on their own. That's worth sitting with.</div>
+    <div class="word-cloud" id="wcloud-2-2" data-mark="wc22" style="justify-content:flex-start;margin-bottom:1.2rem;">
+      <div class="w-item" onclick="markCycle(this,'wc22')">SOME PIG</div>
+      <div class="w-item" onclick="markCycle(this,'wc22')">TERRIFIC</div>
+      <div class="w-item" onclick="markCycle(this,'wc22')">RADIANT</div>
+      <div class="w-item" onclick="markCycle(this,'wc22')">HUMBLE</div>
+      <div class="w-item" onclick="markCycle(this,'wc22')">MIRACULOUS</div>
+    </div>
+    <div class="mark-legend">
+      <div class="mark-legend-item"><div class="mark-dot" style="background:var(--ochre);"></div>Feels important</div>
+      <div class="mark-legend-item"><div class="mark-dot" style="background:var(--sage);"></div>Surprises me</div>
+      <div class="mark-legend-item"><div class="mark-dot" style="background:var(--denim);"></div>I want to think about this</div>
+    </div>
+    <div class="surface-rule"></div>
+    <div class="entry-prompt" style="font-size:1.05rem;">HUMBLE is Charlotte's last word. MIRACULOUS is the word she never writes — but the humans reach it anyway. What does that tell you about how language actually works?</div>
+    <div class="entry-note">Think about who is doing the work here — Charlotte, or the people watching.</div>
+    <textarea class="thinking-area" id="t2-2" style="min-height:90px;" placeholder="Take your time with this one." oninput="wc(this,'wc2-2')"></textarea>
+    <div class="word-count" id="wc2-2"></div>
+  </div>
+
+  <!-- 2.3 REFLECTIVE -->
+  <div class="surface reflective" data-interactive>
+    <div class="entry-prompt">Charlotte's plan has nothing to do with what Wilbur actually is.</div>
+    <div class="entry-note">It has everything to do with what people are willing to believe, if the words are right.</div>
+    <div class="surface-rule" style="max-width:540px;margin:0 auto;"></div>
+    <div class="entry-prompt" style="font-size:1.05rem;">Can you think of a real example — from anywhere — where words changed how people saw something that hadn't actually changed?</div>
+    <textarea class="thinking-area" id="t2-3" style="min-height:110px;" placeholder="Could be big. Could be small. Could be about you." oninput="wc(this,'wc2-3')"></textarea>
+    <div class="word-count" id="wc2-3"></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════ ZONE 3 ═══════════════════════════ -->
+<div id="z3" class="zone">
+  <div class="zone-title">The Barn</div>
+  <div class="zone-subtitle">Mid reading · Zone Three</div>
+  <div class="zone-teacher-note">FIXED: Character panels are now shorter and each one immediately opens a focused discussion question — not just a reflection prompt at the end. Templeton surface still generates the best argument. Open one character at a time in projection.</div>
+
+  <!-- ILLUSTRATION 3: The barn interior -->
+  <div class="illus-wrap" style="margin-top:0;margin-bottom:2rem;">
+    <div>
+      <svg width="500" height="200" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="ink3"><feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.0"/></filter></defs>
+        <!-- Floor -->
+        <path d="M0 160 L500 160 L500 200 L0 200Z" fill="#c8a855" opacity="0.15"/>
+        <!-- Straw on floor -->
+        <g stroke="#9a7a35" stroke-width="0.8" opacity="0.35" filter="url(#ink3)">
+          <line x1="20"  y1="175" x2="65"  y2="168"/><line x1="40"  y1="180" x2="80"  y2="172"/>
+          <line x1="100" y1="172" x2="145" y2="178"/><line x1="120" y1="168" x2="160" y2="175"/>
+          <line x1="200" y1="174" x2="240" y2="169"/><line x1="260" y1="170" x2="305" y2="176"/>
+          <line x1="350" y1="173" x2="390" y2="168"/><line x1="420" y1="169" x2="465" y2="175"/>
+        </g>
+        <!-- Back wall -->
+        <rect x="0" y="0" width="500" height="162" fill="none" stroke="#2B2520" stroke-width="0.5" opacity="0.1"/>
+        <!-- Wall planks -->
+        <g stroke="#2B2520" stroke-width="0.5" opacity="0.12">
+          <line x1="0" y1="0" x2="0" y2="160"/><line x1="55" y1="0" x2="55" y2="160"/>
+          <line x1="110" y1="0" x2="110" y2="160"/><line x1="165" y1="0" x2="165" y2="160"/>
+          <line x1="220" y1="0" x2="220" y2="160"/><line x1="275" y1="0" x2="275" y2="160"/>
+          <line x1="330" y1="0" x2="330" y2="160"/><line x1="385" y1="0" x2="385" y2="160"/>
+          <line x1="440" y1="0" x2="440" y2="160"/><line x1="495" y1="0" x2="495" y2="160"/>
+        </g>
+        <!-- Rafters -->
+        <g stroke="#2B2520" stroke-width="2.5" opacity="0.4" filter="url(#ink3)">
+          <line x1="0" y1="35" x2="500" y2="45"/>
+          <line x1="0" y1="75" x2="500" y2="82"/>
+        </g>
+        <!-- Wilbur in pen — round pig shape, pen fence -->
+        <g filter="url(#ink3)">
+          <!-- pen fence -->
+          <rect x="175" y="128" width="150" height="35" rx="2" fill="none" stroke="#2B2520" stroke-width="1.8"/>
+          <line x1="210" y1="128" x2="210" y2="163"/><line x1="250" y1="128" x2="250" y2="163"/><line x1="290" y1="128" x2="290" y2="163"/>
+          <!-- wilbur body -->
+          <ellipse cx="248" cy="148" rx="28" ry="16" fill="none" stroke="#2B2520" stroke-width="1.5"/>
+          <!-- head -->
+          <ellipse cx="276" cy="145" rx="12" ry="10" fill="none" stroke="#2B2520" stroke-width="1.4"/>
+          <!-- snout -->
+          <ellipse cx="286" cy="145" rx="5" ry="4" fill="none" stroke="#2B2520" stroke-width="1.2"/>
+          <circle cx="284" cy="144" r="1" fill="#2B2520"/><circle cx="287" cy="144" r="1" fill="#2B2520"/>
+          <!-- ear -->
+          <path d="M272 137 Q268 130 275 134" fill="none" stroke="#2B2520" stroke-width="1.2"/>
+          <!-- eye -->
+          <circle cx="280" cy="141" r="1.5" fill="#2B2520"/>
+          <!-- legs -->
+          <line x1="233" y1="162" x2="231" y2="172"/><line x1="245" y1="163" x2="243" y2="173"/>
+          <line x1="257" y1="163" x2="256" y2="172"/><line x1="265" y1="162" x2="264" y2="172"/>
+          <!-- tail curl -->
+          <path d="M220 148 Q212 143 215 138 Q218 133 222 138" fill="none" stroke="#2B2520" stroke-width="1.2"/>
+          <!-- straw in pen -->
+          <line x1="190" y1="158" x2="220" y2="154"/><line x1="205" y1="162" x2="230" y2="158"/>
+        </g>
+        <!-- Charlotte's web top-right corner -->
+        <g stroke="#2B2520" stroke-width="0.6" opacity="0.5" filter="url(#ink3)">
+          <line x1="440" y1="10" x2="380" y2="78"/><line x1="440" y1="10" x2="440" y2="78"/>
+          <line x1="440" y1="10" x2="500" y2="72"/><line x1="440" y1="10" x2="410" y2="72"/>
+          <line x1="440" y1="10" x2="470" y2="72"/>
+          <ellipse cx="440" cy="35" rx="18" ry="14" fill="none"/>
+          <ellipse cx="440" cy="52" rx="36" ry="28" fill="none"/>
+          <!-- charlotte -->
+          <ellipse cx="440" cy="18" rx="5" ry="6" fill="none" stroke-width="1.1"/>
+          <ellipse cx="440" cy="13" rx="3" ry="3" fill="none" stroke-width="1"/>
+          <line x1="437" y1="14" x2="431" y2="9"/><line x1="443" y1="14" x2="449" y2="9"/>
+          <line x1="436" y1="16" x2="429" y2="14"/><line x1="444" y1="16" x2="451" y2="14"/>
+          <line x1="436" y1="19" x2="429" y2="20"/><line x1="444" y1="19" x2="451" y2="20"/>
+          <line x1="437" y1="22" x2="431" y2="26"/><line x1="443" y1="22" x2="449" y2="26"/>
+        </g>
+        <!-- Light shaft from door left -->
+        <path d="M0 40 Q30 60 0 100" fill="#c8a855" opacity="0.07"/>
+        <path d="M0 40 L60 90 L60 100 L0 100Z" fill="#c8a855" opacity="0.05"/>
+      </svg>
+      <div class="illus-caption">The Zuckerman barn — Wilbur in his pen, Charlotte above in the corner</div>
+    </div>
+  </div>
+
+  <!-- 3.1 DENSE — character explorer (FIXED: short panels, immediate discussion Q per character) -->
+  <div class="surface dense" data-interactive>
+    <div class="entry-prompt">The Zuckerman barn is full of characters who have very different relationships to the world.</div>
+    <div class="entry-note">Click a name to open them. Each one comes with a question — talk about it before moving on.</div>
+    <div class="char-map">
+      <div class="char-node" onclick="charToggle('char-charlotte')" data-char="char-charlotte">
+        <span class="char-node-name">Charlotte</span><span class="char-node-word">the spider</span>
       </div>
-      <div class="q-feedback"><em>Araneus cavaticus</em> is the real species name for the barn spider. E.B. White researched this carefully.</div>
-    </div>
-    <div class="quiz-block">
-      <div class="q-text">3. Who tells Wilbur he will be slaughtered at Christmas?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Charlotte</button>
-        <button class="q-option" onclick="checkAnswer(this,'correct')">The old sheep</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Fern</button>
+      <div class="char-node" onclick="charToggle('char-wilbur')" data-char="char-wilbur">
+        <span class="char-node-name">Wilbur</span><span class="char-node-word">the pig</span>
       </div>
-      <div class="q-feedback">The sheep is the novel's realist — she says hard things plainly, without cruelty, because she thinks Wilbur deserves to know.</div>
-    </div>
-  </div>
-</section>
-
-<!-- PART 2 -->
-<section id="part2" class="section">
-  <h2 class="sec-title">Part Two: The Fair</h2>
-  <div class="sec-rule"></div>
-  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Chapters 8–19 — Charlotte writes. The world notices. The county fair changes everything.</p>
-
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 8–11 &nbsp;</span><span class="ch-label">Charlotte's Plan / SOME PIG</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>Charlotte thinks carefully. Her plan is this: she will write words in her web — words that describe Wilbur — and make the humans believe he is something extraordinary. Not because he is. But because they will be <em>told</em> he is.</p>
-      <p>One morning, Mr Zuckerman finds two words above the pig pen: <strong>SOME PIG.</strong> He is stunned. Word spreads. People come from miles around. No one questions it — they simply believe.</p>
-      <div class="illustration">
-        <div class="ill-title">Garth Williams — SOME PIG</div>
-        <em>Mr and Mrs Zuckerman staring up at the web with open mouths. Wilbur sits quietly below, unaware of the fuss. Charlotte is barely visible in the top corner.</em>
+      <div class="char-node" onclick="charToggle('char-templeton')" data-char="char-templeton">
+        <span class="char-node-name">Templeton</span><span class="char-node-word">the rat</span>
       </div>
-      <div class="key-moment">✦ Key moment: Wilbur hasn't changed at all. The <em>words</em> change how people see him. Charlotte understands the power of language before Wilbur has any idea it's being used.</div>
-      <p>Templeton the rat — selfish, cynical, but useful — is persuaded by Charlotte to collect words from old magazines and newspapers.</p>
-    </div>
-  </div>
-
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 12–16 &nbsp;</span><span class="ch-label">TERRIFIC / RADIANT / HUMBLE</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>Charlotte weaves more words: <strong>TERRIFIC</strong>. Then <strong>RADIANT</strong>. Each time, the humans are amazed. Each time, Wilbur is a little safer. Each time, Charlotte grows a little more tired.</p>
-      <div class="key-moment">✦ The choice of <strong>HUMBLE</strong> is quietly beautiful. Charlotte says Wilbur is not proud — but it is Charlotte herself who is humble. She works in the dark, takes no credit, asks for nothing.</div>
-      <p>The Zuckermans decide to enter Wilbur in the county fair. Charlotte begins planning what she'll weave there — and privately knows she is weakening.</p>
-    </div>
-  </div>
-
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 17–19 &nbsp;</span><span class="ch-label">The County Fair</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>Wilbur is taken to the county fair. Charlotte comes too, though the journey is exhausting her. At the fair, he faces a rival — Uncle, a magnificent pig from another farm — who threatens to take the prize and make Wilbur seem ordinary.</p>
-      <div class="illustration">
-        <div class="ill-title">Garth Williams — The fair at night</div>
-        <em>Fairground lights on strings between the animal pens. Wilbur's crate in a long row. Charlotte barely visible above him, spinning in the corner of his pen.</em>
+      <div class="char-node" onclick="charToggle('char-fern')" data-char="char-fern">
+        <span class="char-node-name">Fern</span><span class="char-node-word">the girl</span>
       </div>
-      <p>Charlotte weaves her final word — <strong>HUMBLE</strong> — and on the same night, quietly completes something else: her egg sac. 514 eggs, in a papery grey cocoon, hidden in the corner of Wilbur's pen.</p>
-      <div class="key-moment">✦ Key moment: As Charlotte creates life, she is preparing for her own death. The two things happen side by side — which is exactly how nature works.</div>
-    </div>
-  </div>
-
-  <div style="margin-top:2rem;">
-    <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--barn); margin-bottom:1rem;">✦ Check Your Understanding — Part 2</h3>
-    <div class="quiz-block">
-      <div class="q-text">4. What is Charlotte's plan to save Wilbur?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">She asks Fern to buy him back.</button>
-        <button class="q-option" onclick="checkAnswer(this,'correct')">She writes words in her web to make the humans think he is special.</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">She helps Wilbur escape from the farm.</button>
+      <div class="char-node" onclick="charToggle('char-sheep')" data-char="char-sheep">
+        <span class="char-node-name">The old sheep</span><span class="char-node-word">the realist</span>
       </div>
-      <div class="q-feedback">Charlotte understands that humans can be persuaded by words and spectacle — even when the thing in front of them hasn't changed at all.</div>
-    </div>
-    <div class="quiz-block">
-      <div class="q-text">5. What does Templeton help Charlotte with?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'correct')">He brings word-clippings from magazines and newspapers.</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">He carries secret messages between the farm and the fair.</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">He frightens the judges so Wilbur wins.</button>
+      <div class="char-node" onclick="charToggle('char-zuckerman')" data-char="char-zuckerman">
+        <span class="char-node-name">The Zuckermans</span><span class="char-node-word">the farm</span>
       </div>
-      <div class="q-feedback">Templeton helps — but only because there's something in it for him. That is the difference between an ally and a friend.</div>
     </div>
-    <div class="quiz-block">
-      <div class="q-text">6. In what order does Charlotte weave her words?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Radiant → Terrific → Some Pig → Humble</button>
-        <button class="q-option" onclick="checkAnswer(this,'correct')">Some Pig → Terrific → Radiant → Humble</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Humble → Some Pig → Terrific → Radiant</button>
+
+    <div class="char-expand" id="char-charlotte">
+      <div class="char-expand-name">Charlotte A. Cavatica</div>
+      <p>Intelligent, patient, practical. She catches and eats flies — she doesn't apologise for it. Her offer of friendship to Wilbur is unprompted and complete: <em>"I've watched you all day and I like you."</em> She works at night. She never takes credit.</p>
+      <div class="char-thinking">Charlotte is the most selfless character in the novel — and also the one who kills and eats other creatures. Does that make her selflessness more impressive, or more complicated?</div>
+      <div class="char-discuss">
+        <textarea class="thinking-area" style="min-height:70px;" placeholder="One thought — or one disagreement." oninput="wc(this,'wc-cc')"></textarea>
+        <div class="word-count" id="wc-cc"></div>
       </div>
-      <div class="q-feedback">Each word builds Wilbur's reputation one step further — a deliberate, cumulative campaign.</div>
     </div>
-  </div>
-</section>
-
-<!-- PART 3 -->
-<section id="part3" class="section">
-  <h2 class="sec-title">Part Three: Charlotte's Gift</h2>
-  <div class="sec-rule"></div>
-  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Chapters 20–22 — Wilbur wins. Charlotte dies. Spring returns.</p>
-
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 20–21 &nbsp;</span><span class="ch-label">The Last Day / Charlotte's Death</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>Wilbur wins a special award at the fair — not the top prize, but enough. He is safe. The Zuckermans will not kill him. When Wilbur goes to thank Charlotte, he finds her barely moving. She tells him plainly: she is dying. She will not be going home.</p>
-      <div class="illustration">
-        <div class="ill-title">Garth Williams — Charlotte alone</div>
-        <em>Charlotte small and still in the far corner of her web. The pen below empty. The fairground quieter now. She is entirely alone — except for Wilbur, watching from his crate.</em>
+    <div class="char-expand" id="char-wilbur">
+      <div class="char-expand-name">Wilbur</div>
+      <p>He panics easily and needs reassurance. He doesn't have Charlotte's discipline or Templeton's cunning. What he has is loyalty and a capacity for love that is complete and unguarded. He is saved not because he is extraordinary — but because he is loved.</p>
+      <div class="char-thinking">Wilbur is a passive character — most things happen to him rather than because of him. Does that make him less interesting? Or is there something important about a character who receives?</div>
+      <div class="char-discuss">
+        <textarea class="thinking-area" style="min-height:70px;" placeholder="One thought — or one disagreement." oninput="wc(this,'wc-ww')"></textarea>
+        <div class="word-count" id="wc-ww"></div>
       </div>
-      <div class="key-moment">✦ E.B. White does not soften this. Charlotte dies at the fairground, alone. But she dies having done what she set out to do — and having left her egg sac behind.</div>
-      <p>Wilbur asks Templeton to carry the egg sac carefully back to the farm. Templeton agrees — after being bribed. Wilbur watches over the sac all winter long.</p>
     </div>
-  </div>
-
-  <div class="chapter">
-    <div class="chapter-head" onclick="toggleChapter(this)">
-      <div><span class="ch-num">Ch. 22 &nbsp;</span><span class="ch-label">Spring / A Warm Wind</span></div>
-      <span class="ch-arrow">▾</span>
-    </div>
-    <div class="chapter-body">
-      <p>Spring returns to the Zuckerman farm. The egg sac opens. Hundreds of tiny spiders emerge — and most of them float away on silk threads to start their own lives. Wilbur is heartbroken all over again.</p>
-      <p>Then three small spiders decide to stay. They are Charlotte's daughters: <strong>Joy</strong>, <strong>Aranea</strong>, and <strong>Nellie</strong>. Wilbur loves them — but he never forgets Charlotte. No one takes her place.</p>
-      <div class="key-moment">✦ The novel ends: <em>"It is not often that someone comes along who is a true friend and a good writer. Charlotte was both."</em> — the whole book in two sentences.</div>
-    </div>
-  </div>
-
-  <div style="margin-top:2rem;">
-    <h3 style="font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--barn); margin-bottom:1rem;">✦ Check Your Understanding — Part 3</h3>
-    <div class="quiz-block">
-      <div class="q-text">7. How many eggs are in Charlotte's egg sac?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">114</button>
-        <button class="q-option" onclick="checkAnswer(this,'correct')">514</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">214</button>
+    <div class="char-expand" id="char-templeton">
+      <div class="char-expand-name">Templeton</div>
+      <p>Selfish, gluttonous, useful. He helps only when there is something in it for him — food, comfort, advantage. He calls himself practical. Without him, Charlotte cannot find the words. Without his help at the fair, Wilbur might not survive.</p>
+      <div class="char-thinking">Is there a difference between someone who helps for selfish reasons and someone who doesn't help at all? Where do you put Templeton?</div>
+      <div class="char-discuss">
+        <textarea class="thinking-area" style="min-height:70px;" placeholder="Make a case either way." oninput="wc(this,'wc-tt')"></textarea>
+        <div class="word-count" id="wc-tt"></div>
       </div>
-      <div class="q-feedback">514 eggs — Charlotte's final, enormous act. Most of the babies will fly away, but a few stay at the farm with Wilbur.</div>
     </div>
-    <div class="quiz-block">
-      <div class="q-text">8. What are the names of the three spiders who stay at the farm?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'correct')">Joy, Aranea, and Nellie</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Hope, Clara, and Grace</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">Faith, Willa, and Rose</button>
+    <div class="char-expand" id="char-fern">
+      <div class="char-expand-name">Fern</div>
+      <p>She saves Wilbur with moral clarity and conviction. She visits the barn, sits quietly, listens. By the time of the county fair, she is talking to a boy called Henry Fussy and barely notices the pig. The barn has become something behind her.</p>
+      <div class="char-thinking">Fern growing up and away from the barn is treated without sentimentality — it just happens. What do you think she will remember about this summer when she is older?</div>
+      <div class="char-discuss">
+        <textarea class="thinking-area" style="min-height:70px;" placeholder="One thought — or one disagreement." oninput="wc(this,'wc-ff')"></textarea>
+        <div class="word-count" id="wc-ff"></div>
       </div>
-      <div class="q-feedback">Joy, Aranea, and Nellie — Charlotte's legacy, literally living on in the next generation.</div>
     </div>
-    <div class="quiz-block">
-      <div class="q-text">9. At the end of the novel, what does Wilbur feel about Charlotte?</div>
-      <div class="q-options">
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">He gradually forgets her as life on the farm continues.</button>
-        <button class="q-option" onclick="checkAnswer(this,'wrong')">He is quietly angry that she couldn't come home.</button>
-        <button class="q-option" onclick="checkAnswer(this,'correct')">He loves and remembers her forever — no one ever takes her place.</button>
+    <div class="char-expand" id="char-sheep">
+      <div class="char-expand-name">The Old Sheep</div>
+      <p>She tells Wilbur he is going to be killed. She doesn't soften it. She thinks he deserves to know. She is not cruel — she is honest in a way that most of the other characters are not, and her honesty is what sets the whole plot in motion.</p>
+      <div class="char-thinking">Is it kind to tell someone a hard truth they didn't ask for? Is staying silent ever kinder?</div>
+      <div class="char-discuss">
+        <textarea class="thinking-area" style="min-height:70px;" placeholder="One thought — or one disagreement." oninput="wc(this,'wc-ss')"></textarea>
+        <div class="word-count" id="wc-ss"></div>
       </div>
-      <div class="q-feedback">White is clear about this: Wilbur loves the new spiders, but Charlotte is irreplaceable. That is what the book says friendship truly means.</div>
     </div>
-  </div>
-</section>
-
-<!-- THEMES -->
-<section id="themes" class="section">
-  <h2 class="sec-title">The Big Themes</h2>
-  <div class="sec-rule"></div>
-  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Click each card to reveal what it means in the novel.</p>
-
-  <div class="reveal-grid">
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">Friendship</span>
-      <span class="back">Charlotte asks nothing of Wilbur. She gives everything — time, skill, finally her life — because she loves him. True friendship in this novel is selfless and costly.</span>
-    </div>
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">Death</span>
-      <span class="back">Charlotte's death is honest and unavoidable. White doesn't soften it — she dies alone, at the fairground. But her life had meaning. She saved Wilbur and left behind her children.</span>
-    </div>
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">The Power of Words</span>
-      <span class="back">Charlotte's words don't change Wilbur — they change how humans <em>see</em> him. Language shapes reality. TERRIFIC and HUMBLE give people a story to believe in, whether it's true or not.</span>
-    </div>
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">Nature's Cycles</span>
-      <span class="back">Birth, growth, death, renewal. Charlotte dies as her eggs hatch. Spring follows winter. The farm continues. White sees nature as beautiful — and completely unsentimental.</span>
-    </div>
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">Innocence vs. Reality</span>
-      <span class="back">Fern sees animals as equals. Adults see them as livestock. Wilbur has to learn that the world doesn't always protect you. Growing up means accepting that hard truth.</span>
-    </div>
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">Loyalty</span>
-      <span class="back">Charlotte is loyal even when it costs her everything. Compare Templeton — useful but never truly loyal. The novel asks: what is the difference between being <em>helpful</em> and being a <em>friend</em>?</span>
-    </div>
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">Humility</span>
-      <span class="back">Charlotte chooses HUMBLE for Wilbur. But it describes herself. She works alone, quietly, at night, while everyone else admires the pig. She never takes credit. That is real humility.</span>
-    </div>
-    <div class="reveal-card" onclick="this.classList.toggle('revealed')">
-      <span class="front">Legacy</span>
-      <span class="back">Charlotte knows she is dying but keeps working. Her egg sac is her legacy — 514 lives she leaves behind. Does a life have meaning even if it ends? Charlotte's answer is yes.</span>
+    <div class="char-expand" id="char-zuckerman">
+      <div class="char-expand-name">The Zuckermans</div>
+      <p>Not villains — just practical. They would have killed Wilbur without cruelty. When they see Charlotte's web, they believe immediately, because they <em>want</em> to believe in something. That human need — to find meaning in the ordinary — is part of what Charlotte understands and uses.</p>
+      <div class="char-thinking">Charlotte's plan works because humans are ready to believe a story. What does that say about people?</div>
+      <div class="char-discuss">
+        <textarea class="thinking-area" style="min-height:70px;" placeholder="One thought — or one disagreement." oninput="wc(this,'wc-zz')"></textarea>
+        <div class="word-count" id="wc-zz"></div>
+      </div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:1rem;">
-    <h3>A Note on E.B. White's Writing</h3>
-    <p>White was a professional writer who co-authored <em>The Elements of Style</em>, still one of the most famous guides to writing in English. He chose every word in this novel carefully. The prose is simple on the surface but precise underneath. Notice how the barn description in Chapter 3 — smells, sounds, textures — makes you feel you are physically there. That is what craft looks like.</p>
+  <!-- 3.2 REFLECTIVE -->
+  <div class="surface reflective" style="border-top:none;">
+    <div class="entry-prompt" style="font-size:1.5rem;margin-bottom:0.9rem;">Belonging.</div>
+    <div class="entry-note">Wilbur didn't choose the barn. He was placed there. And yet it becomes the whole world to him. Where, for you, is that place?</div>
+    <textarea class="thinking-area" id="t3-2" style="min-height:90px;" placeholder="You don't have to share this." oninput="wc(this,'wc3-2')"></textarea>
+    <div class="word-count" id="wc3-2"></div>
   </div>
-</section>
+</div>
 
-<!-- CHARACTERS -->
-<section id="characters" class="section">
-  <h2 class="sec-title">The Characters</h2>
-  <div class="sec-rule"></div>
 
-  <div class="card red">
-    <h3>Charlotte A. Cavatica</h3>
-    <p>A large grey barn spider. Patient, intelligent, a gifted writer. She is practical about nature — she catches and eats flies and does not apologise for it — but entirely devoted to Wilbur. She sees his worth before anyone else does. She is the moral and emotional centre of the novel.</p>
-  </div>
-  <div class="card">
-    <h3>Wilbur</h3>
-    <p>Small, naive, sweet-natured. He is emotional and easily frightened — he cries when he hears about his fate, panics at the fair, misses Charlotte terribly. But he is loyal and genuinely good. He is saved not because he is extraordinary, but because he is loved.</p>
-  </div>
-  <div class="card straw">
-    <h3>Fern Arable</h3>
-    <p>The eight-year-old girl who saves Wilbur at birth. Morally fearless in Chapter 1. But she gradually grows up and away from the barn — by the fair she's interested in boys, not pigs. Her distancing from Wilbur is a quiet kind of loss too.</p>
-  </div>
-  <div class="card grey">
-    <h3>Templeton the Rat</h3>
-    <p>Selfish, gluttonous, and cynical — but essential. He helps only when there's something in it for him. White is honest: Templeton is not a villain, but he is not a friend. He is an opportunist. That is a different and real kind of character.</p>
-  </div>
-  <div class="card">
-    <h3>The Zuckermans and the Arables</h3>
-    <p>Ordinary farming people. Not cruel — just practical. They would have killed Wilbur without malice. Charlotte's web works on them because they <em>want</em> to believe in something extraordinary. That human need to believe is part of White's point.</p>
-  </div>
-</section>
+<!-- ═══════════════════════════ ZONE 4 ═══════════════════════════ -->
+<div id="z4" class="zone">
+  <div class="zone-title">What Charlotte Does</div>
+  <div class="zone-subtitle">Mid–late reading · Zone Four</div>
+  <div class="zone-teacher-note">The emotional core. Go slowly here. The moment-card surface rewards whole-class discussion more than individual completion. Allow silences. The spectrum on friendship works best after students have finished the book.</div>
 
-<!-- FULL QUIZ -->
-<section id="quiz" class="section">
-  <h2 class="sec-title">Full Novel Quiz</h2>
-  <div class="sec-rule"></div>
-  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">These questions cover the whole book. Click an answer to find out.</p>
-
-  <div class="quiz-block">
-    <div class="q-text">1. What kind of animal is Charlotte?</div>
-    <div class="q-options">
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">A moth</button>
-      <button class="q-option" onclick="checkAnswer(this,'correct')">A spider</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">A grasshopper</button>
-    </div>
-    <div class="q-feedback">Specifically a barn spider — <em>Araneus cavaticus</em>. E.B. White researched spiders carefully while writing the book.</div>
-  </div>
-
-  <div class="quiz-block">
-    <div class="q-text">2. Why is Wilbur almost killed at the very beginning?</div>
-    <div class="q-options">
-      <button class="q-option" onclick="checkAnswer(this,'correct')">He was born the runt of the litter.</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">He was sick and couldn't be treated.</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">There were too many pigs on the farm.</button>
-    </div>
-    <div class="q-feedback">Runts were often killed because they were expensive to raise with little return. Fern's argument stops this.</div>
-  </div>
-
-  <div class="quiz-block">
-    <div class="q-text">3. What does Charlotte's web say that causes the first sensation?</div>
-    <div class="q-options">
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">WONDERFUL</button>
-      <button class="q-option" onclick="checkAnswer(this,'correct')">SOME PIG</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">TERRIFIC</button>
-    </div>
-    <div class="q-feedback">Two simple words — but they transform how the whole community sees Wilbur overnight.</div>
-  </div>
-
-  <div class="quiz-block">
-    <div class="q-text">4. Which word does Charlotte choose last?</div>
-    <div class="q-options">
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">RADIANT</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">TERRIFIC</button>
-      <button class="q-option" onclick="checkAnswer(this,'correct')">HUMBLE</button>
-    </div>
-    <div class="q-feedback">HUMBLE is the final word — and the most ironic. It describes Charlotte far more than Wilbur.</div>
-  </div>
-
-  <div class="quiz-block">
-    <div class="q-text">5. Where does Charlotte die?</div>
-    <div class="q-options">
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">In her web above Wilbur's pen at the farm</button>
-      <button class="q-option" onclick="checkAnswer(this,'correct')">At the county fairground, alone</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">In Fern's garden</button>
-    </div>
-    <div class="q-feedback">She dies at the fair, alone, as the Zuckermans load Wilbur to go home. This is one of the most honest deaths in children's literature.</div>
-  </div>
-
-  <div class="quiz-block">
-    <div class="q-text">6. What does Templeton get in return for his help at the fair?</div>
-    <div class="q-options">
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">A safe place to sleep in the barn</button>
-      <button class="q-option" onclick="checkAnswer(this,'correct')">First choice of Wilbur's food for the rest of his life</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">A place in the farmhouse</button>
-    </div>
-    <div class="q-feedback">Templeton negotiates even in a crisis. Wilbur promises him first pick of his slop every day — and Templeton accepts immediately.</div>
-  </div>
-
-  <div class="quiz-block">
-    <div class="q-text">7. What is the very last line of the novel about?</div>
-    <div class="q-options">
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">Wilbur growing old happily on the farm</button>
-      <button class="q-option" onclick="checkAnswer(this,'wrong')">Fern returning to the barn one last time</button>
-      <button class="q-option" onclick="checkAnswer(this,'correct')">Charlotte — that she was both a true friend and a good writer</button>
-    </div>
-    <div class="q-feedback"><em>"It is not often that someone comes along who is a true friend and a good writer. Charlotte was both."</em></div>
-  </div>
-</section>
-
-<!-- DISCUSSION -->
-<section id="discussion" class="section">
-  <h2 class="sec-title">Discussion Prompts</h2>
-  <div class="sec-rule"></div>
-  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">Talk about these with the group. There's no single right answer — what matters is how you defend your thinking.</p>
-
-  <div class="discussion-prompt">
-    <span class="prompt-tag">Friendship</span>
-    <p>Charlotte does everything for Wilbur but asks for nothing in return. Is that realistic? Do you think real friendship always involves giving and receiving? Or can it be completely one-sided?</p>
-  </div>
-  <div class="discussion-prompt">
-    <span class="prompt-tag">Language &amp; Power</span>
-    <p>Charlotte's words don't change Wilbur — they change how people <em>see</em> him. Can you think of real-life examples where words change how we see someone, even if that person hasn't changed?</p>
-  </div>
-  <div class="discussion-prompt">
-    <span class="prompt-tag">Death</span>
-    <p>E.B. White doesn't protect you from Charlotte's death — she dies alone, and she doesn't come back. Why do you think he made that choice? Would the book be better or worse if she survived?</p>
-  </div>
-  <div class="discussion-prompt">
-    <span class="prompt-tag">Templeton</span>
-    <p>Templeton helps, but only for selfish reasons. Without him, Charlotte's plan fails. Does he deserve any credit? What's the difference between someone who helps for selfish reasons and someone who doesn't help at all?</p>
-  </div>
-  <div class="discussion-prompt">
-    <span class="prompt-tag">Fern</span>
-    <p>Fern saves Wilbur at the start, but by the end she's barely paying attention — she's at the fair, talking to a boy called Henry Fussy. Is that sad? Is it just growing up? Do we always have to leave behind the things we cared about when we were younger?</p>
-  </div>
-  <div class="discussion-prompt">
-    <span class="prompt-tag">You &amp; the Book</span>
-    <p>If Charlotte could weave a word in her web to describe <em>you</em>, what word would you want it to be — and why? What word do you think she would actually choose?</p>
-  </div>
-</section>
-
-<!-- MATCHING -->
-<section id="match" class="section">
-  <h2 class="sec-title">Matching Activities</h2>
-  <div class="sec-rule"></div>
-
-  <div class="card" style="margin-bottom:1.5rem;">
-    <h3>Activity 1 — Charlotte's Words</h3>
-    <p style="margin-bottom:1rem;">Drag each of Charlotte's web words to the description that best fits it.</p>
-  </div>
-  <div class="match-container" id="match1">
-    <div class="match-col" id="match1-source">
-      <h4>Charlotte's Words</h4>
-      <div class="draggable" draggable="true" data-value="some-pig">SOME PIG</div>
-      <div class="draggable" draggable="true" data-value="terrific">TERRIFIC</div>
-      <div class="draggable" draggable="true" data-value="radiant">RADIANT</div>
-      <div class="draggable" draggable="true" data-value="humble">HUMBLE</div>
-    </div>
-    <div class="match-col">
-      <h4>What It Suggests</h4>
-      <div class="drop-zone" data-answer="some-pig"><span class="zone-label">The very first word — vague but powerful</span></div>
-      <div class="drop-zone" data-answer="radiant"><span class="zone-label">Glowing, full of light and beauty</span></div>
-      <div class="drop-zone" data-answer="terrific"><span class="zone-label">Extraordinary, impressive, remarkable</span></div>
-      <div class="drop-zone" data-answer="humble"><span class="zone-label">Not proud — ironically, this describes Charlotte more than Wilbur</span></div>
+  <!-- 4.1 OPEN — the central exchange -->
+  <div class="surface open" style="padding-block:5rem;margin-bottom:0;border-bottom:none;">
+    <div style="max-width:540px;margin:0 auto;text-align:center;">
+      <div class="literary-quote" style="text-align:left;max-width:500px;margin:0 auto 1.6rem;">
+        "Why did you do all this for me? I don't deserve it. I've never done anything for you."
+        <div class="quote-attr">Wilbur, near the end</div>
+      </div>
+      <div class="literary-quote" style="text-align:left;max-width:500px;margin:0 auto 0;">
+        "You have been my friend. That in itself is a tremendous thing."
+        <div class="quote-attr">Charlotte, in reply</div>
+      </div>
     </div>
   </div>
-  <button class="match-btn" onclick="checkMatch('match1')">Check Answers</button>
-  <button class="reset-btn" onclick="resetMatch('match1','match1-source')">Reset</button>
-  <div class="match-result" id="match1-result"></div>
 
-  <hr style="border:none; border-top:1px solid rgba(44,36,22,0.1); margin:2.5rem 0;">
-
-  <div class="card" style="margin-bottom:1.5rem;">
-    <h3>Activity 2 — Who Said It?</h3>
-    <p style="margin-bottom:1rem;">Drag each character to the quote or description that best fits them.</p>
+  <!-- 4.1b REFLECTIVE -->
+  <div class="surface reflective" style="border-top:none;">
+    <div class="entry-prompt" style="font-size:1.15rem;margin-bottom:0.8rem;">Charlotte says that being a friend — just being one — is itself enough. Is that true?</div>
+    <div class="entry-note">Think of someone in your own life. Has their presence alone — before they did anything — meant something?</div>
+    <textarea class="thinking-area" id="t4-1" style="min-height:100px;" placeholder="Take your time with this one." oninput="wc(this,'wc4-1')"></textarea>
+    <div class="word-count" id="wc4-1"></div>
   </div>
-  <div class="match-container" id="match2">
-    <div class="match-col" id="match2-source">
-      <h4>Characters</h4>
-      <div class="draggable" draggable="true" data-value="charlotte">Charlotte</div>
-      <div class="draggable" draggable="true" data-value="wilbur">Wilbur</div>
-      <div class="draggable" draggable="true" data-value="templeton">Templeton</div>
-      <div class="draggable" draggable="true" data-value="fern">Fern</div>
+
+  <!-- ILLUSTRATION 4: The fair at night -->
+  <div class="illus-wrap">
+    <div>
+      <svg width="460" height="200" viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="ink4"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0.9"/></filter></defs>
+        <!-- Night sky -->
+        <rect x="0" y="0" width="460" height="200" fill="transparent"/>
+        <!-- Stars -->
+        <g fill="#2B2520" opacity="0.3">
+          <circle cx="30"  cy="18" r="1"/><circle cx="75"  cy="8"  r="1.2"/><circle cx="120" cy="22" r="0.9"/>
+          <circle cx="180" cy="10" r="1"/><circle cx="240" cy="18" r="1.3"/><circle cx="310" cy="6"  r="0.9"/>
+          <circle cx="370" cy="15" r="1"/><circle cx="420" cy="10" r="1.2"/><circle cx="450" cy="25" r="0.8"/>
+          <circle cx="55"  cy="35" r="0.8"/><circle cx="150" cy="40" r="1"/><circle cx="290" cy="30" r="0.9"/>
+        </g>
+        <!-- Fairground lights on strings -->
+        <g filter="url(#ink4)">
+          <path d="M20 55 Q115 48 230 52 Q345 56 445 50" fill="none" stroke="#2B2520" stroke-width="0.7" opacity="0.5"/>
+          <path d="M20 55 Q115 48 230 52 Q345 56 445 50" fill="none" stroke="#c8a855" stroke-width="0.5" opacity="0.25"/>
+          <!-- bulbs on string -->
+          <g fill="none" stroke="#2B2520" stroke-width="0.8" opacity="0.55">
+            <ellipse cx="55"  cy="58" rx="4" ry="5"/><ellipse cx="105" cy="54" rx="4" ry="5"/>
+            <ellipse cx="160" cy="56" rx="4" ry="5"/><ellipse cx="215" cy="53" rx="4" ry="5"/>
+            <ellipse cx="270" cy="55" rx="4" ry="5"/><ellipse cx="325" cy="57" rx="4" ry="5"/>
+            <ellipse cx="385" cy="53" rx="4" ry="5"/><ellipse cx="430" cy="51" rx="4" ry="5"/>
+          </g>
+          <!-- glow under bulbs -->
+          <g fill="#c8a855" opacity="0.08">
+            <ellipse cx="55"  cy="65" rx="12" ry="6"/><ellipse cx="160" cy="63" rx="12" ry="6"/>
+            <ellipse cx="270" cy="62" rx="12" ry="6"/><ellipse cx="385" cy="60" rx="12" ry="6"/>
+          </g>
+        </g>
+        <!-- Animal stalls / pens in a row -->
+        <g filter="url(#ink4)" stroke="#2B2520" fill="none">
+          <!-- stall 1 -->
+          <rect x="30" y="80" width="80" height="80" stroke-width="1.5"/>
+          <line x1="30" y1="80" x2="30" y2="160"/><line x1="110" y1="80" x2="110" y2="160"/>
+          <!-- stall 2 — Wilbur's -->
+          <rect x="130" y="75" width="90" height="85" stroke-width="2"/>
+          <line x1="150" y1="75" x2="150" y2="160"/><line x1="200" y1="75" x2="200" y2="160"/>
+          <!-- stall 3 -->
+          <rect x="240" y="80" width="80" height="80" stroke-width="1.5"/>
+          <rect x="340" y="82" width="75" height="78" stroke-width="1.5"/>
+          <!-- stall signs -->
+          <rect x="148" y="83" width="64" height="16" rx="2" stroke-width="1"/>
+        </g>
+        <!-- "WILBUR" sign text -->
+        <text x="180" y="95" font-family="Georgia,serif" font-size="9" fill="#2B2520" text-anchor="middle" opacity="0.65" letter-spacing="1">WILBUR</text>
+        <!-- Wilbur in pen 2 -->
+        <g filter="url(#ink4)" stroke="#2B2520" fill="none">
+          <ellipse cx="175" cy="138" rx="22" ry="14" stroke-width="1.4"/>
+          <ellipse cx="196" cy="135" rx="10" ry="9" stroke-width="1.2"/>
+          <ellipse cx="205" cy="135" rx="4" ry="3" stroke-width="1"/>
+          <circle cx="199" cy="133" r="1.2" fill="#2B2520"/><circle cx="203" cy="133" r="1" fill="#2B2520"/>
+          <circle cx="200" cy="130" r="1.5" fill="#2B2520"/>
+          <line x1="163" y1="150" x2="161" y2="160"/><line x1="172" y1="152" x2="170" y2="162"/>
+          <line x1="182" y1="152" x2="181" y2="162"/><line x1="190" y1="151" x2="189" y2="161"/>
+        </g>
+        <!-- Charlotte's web in Wilbur's pen corner -->
+        <g stroke="#2B2520" stroke-width="0.5" opacity="0.4" filter="url(#ink4)">
+          <line x1="130" y1="76" x2="145" y2="100"/><line x1="130" y1="76" x2="130" y2="100"/>
+          <line x1="130" y1="76" x2="116" y2="98"/>
+          <ellipse cx="130" cy="85" rx="9" ry="6" fill="none"/>
+          <ellipse cx="130" cy="93" rx="16" ry="10" fill="none"/>
+          <!-- charlotte tiny -->
+          <ellipse cx="130" cy="79" rx="3" ry="4" fill="none" stroke-width="0.9"/>
+          <ellipse cx="130" cy="76" rx="2" ry="2" fill="none" stroke-width="0.8"/>
+          <line x1="128" y1="77" x2="123" y2="73"/><line x1="132" y1="77" x2="137" y2="73"/>
+          <line x1="127" y1="79" x2="122" y2="78"/><line x1="133" y1="79" x2="138" y2="78"/>
+          <line x1="127" y1="81" x2="122" y2="84"/><line x1="133" y1="81" x2="138" y2="84"/>
+          <line x1="128" y1="83" x2="124" y2="87"/><line x1="132" y1="83" x2="136" y2="87"/>
+        </g>
+        <!-- Puddle reflections on ground -->
+        <g fill="#2B2520" opacity="0.06">
+          <ellipse cx="70"  cy="170" rx="25" ry="8"/>
+          <ellipse cx="175" cy="172" rx="30" ry="7"/>
+          <ellipse cx="280" cy="168" rx="22" ry="6"/>
+        </g>
+      </svg>
+      <div class="illus-caption">The county fair at night — Wilbur in his pen, Charlotte above him</div>
     </div>
-    <div class="match-col">
-      <h4>Clues</h4>
-      <div class="drop-zone" data-answer="fern"><span class="zone-label">"If I had been very small at birth, would you have killed me?"</span></div>
-      <div class="drop-zone" data-answer="charlotte"><span class="zone-label">Works quietly at night; never takes credit; calls herself Wilbur's friend unprompted</span></div>
-      <div class="drop-zone" data-answer="wilbur"><span class="zone-label">Cries, panics, needs reassurance — but is deeply loving and loyal</span></div>
-      <div class="drop-zone" data-answer="templeton"><span class="zone-label">Helps only when offered a reward; calls himself practical, not sentimental</span></div>
+  </div>
+
+  <!-- 4.2 DENSE — moment ranking -->
+  <div class="surface dense" data-interactive>
+    <div class="entry-prompt">Some moments in this book carry more weight than others.</div>
+    <div class="entry-note">Tap two items to swap them. Arrange from the moment that moved you most to the moment that moved you least. There is no right order.</div>
+    <ul class="rank-list" id="rank-moments"></ul>
+    <div style="margin-top:0.8rem;">
+      <div class="entry-prompt" style="font-size:1rem;">Why did you put your first choice first?</div>
+      <textarea class="thinking-area" id="t4-2" style="min-height:90px;" placeholder="What is it about that moment that holds more weight?" oninput="wc(this,'wc4-2')"></textarea>
+      <div class="word-count" id="wc4-2"></div>
     </div>
   </div>
-  <button class="match-btn" onclick="checkMatch('match2')">Check Answers</button>
-  <button class="reset-btn" onclick="resetMatch('match2','match2-source')">Reset</button>
-  <div class="match-result" id="match2-result"></div>
 
-  <hr style="border:none; border-top:1px solid rgba(44,36,22,0.1); margin:2.5rem 0;">
-
-  <div class="card" style="margin-bottom:1.5rem;">
-    <h3>Activity 3 — Themes and Moments</h3>
-    <p style="margin-bottom:1rem;">Match each theme to the moment in the novel that best shows it.</p>
-  </div>
-  <div class="match-container" id="match3">
-    <div class="match-col" id="match3-source">
-      <h4>Themes</h4>
-      <div class="draggable" draggable="true" data-value="friendship">Friendship</div>
-      <div class="draggable" draggable="true" data-value="death">Death &amp; Legacy</div>
-      <div class="draggable" draggable="true" data-value="language">Power of Language</div>
-      <div class="draggable" draggable="true" data-value="innocence">Innocence vs Reality</div>
+  <!-- 4.3 DENSE — spectrum -->
+  <div class="surface dense" data-interactive>
+    <div class="entry-prompt">Charlotte does everything for Wilbur. She asks for nothing. "I wove those webs for you because I liked you. After all, what's a life, anyway?"</div>
+    <div class="surface-rule"></div>
+    <div class="entry-prompt" style="font-size:1.05rem;">Where on this line does Charlotte's friendship sit?</div>
+    <div class="entry-note">Drag the marker.</div>
+    <div class="spectrum-label-row"><span>Completely one-sided</span><span>It's complicated</span><span>Perfectly balanced</span></div>
+    <div class="spectrum-wrap">
+      <div class="spectrum-track"></div>
+      <input class="spectrum-slider" type="range" min="0" max="100" value="25" id="spec-4-3" oninput="setSpectrum('s43',this.value)">
     </div>
-    <div class="match-col">
-      <h4>Moments from the Novel</h4>
-      <div class="drop-zone" data-answer="language"><span class="zone-label">SOME PIG makes the whole town believe Wilbur is miraculous — without him changing at all</span></div>
-      <div class="drop-zone" data-answer="death"><span class="zone-label">Charlotte makes her egg sac the same night she writes her final word</span></div>
-      <div class="drop-zone" data-answer="innocence"><span class="zone-label">Fern understands the barn; at the fair, she only cares about Henry Fussy</span></div>
-      <div class="drop-zone" data-answer="friendship"><span class="zone-label">Charlotte offers to be Wilbur's friend — unprompted, asking for nothing</span></div>
+    <div class="spectrum-reading" id="spec-label-s43">mostly one-sided</div>
+    <div class="entry-prompt" style="font-size:1rem;margin-top:0.3rem;">What made you place it there?</div>
+    <textarea class="thinking-area" id="t4-3" style="min-height:90px;" placeholder="What does Wilbur give Charlotte, even if he doesn't know he's giving it?" oninput="wc(this,'wc4-3')"></textarea>
+    <div class="word-count" id="wc4-3"></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════ ZONE 5 ═══════════════════════════ -->
+<div id="z5" class="zone">
+  <div class="zone-title">Things That Change</div>
+  <div class="zone-subtitle">Late reading · Zone Five</div>
+  <div class="zone-teacher-note">FIXED: The sorting activity now uses interpretive positions about Charlotte's death — not facts — so there is something to actually argue about. The word-marking surface works best word-by-word as a class: mark, pause, discuss before moving on.</div>
+
+  <!-- 5.1 DENSE — what changes ranking -->
+  <div class="surface dense" data-interactive>
+    <div class="entry-prompt">Something changes in this story — but not everything, and not all at once.</div>
+    <div class="entry-note">Which of these changes most by the end? Tap two items to swap them.</div>
+    <ul class="rank-list" id="rank-changes"></ul>
+    <div style="margin-top:0.9rem;">
+      <div class="entry-prompt" style="font-size:0.97rem;">What made you put that one first?</div>
+      <textarea class="thinking-area" id="t5-1" style="min-height:80px;" placeholder="A word or a sentence is enough." oninput="wc(this,'wc5-1')"></textarea>
+      <div class="word-count" id="wc5-1"></div>
     </div>
   </div>
-  <button class="match-btn" onclick="checkMatch('match3')">Check Answers</button>
-  <button class="reset-btn" onclick="resetMatch('match3','match3-source')">Reset</button>
-  <div class="match-result" id="match3-result"></div>
-</section>
 
-<!-- PRESENTATION -->
-<section id="presentation" class="section">
-  <h2 class="sec-title">Your Presentation</h2>
-  <div class="sec-rule"></div>
-  <p style="margin-bottom:1.5rem; color:var(--ink-light); font-style:italic; font-size:0.95rem;">You'll be presenting Charlotte's Web to your class. Here's what you need to know.</p>
-
-  <div class="pres-task">
-    <h3>The Task</h3>
-    <p>You will present <em>Charlotte's Web</em> to your class — students who haven't read it. Your job is to make them interested in the book, understand its main ideas, and feel something about it.</p>
+  <!-- ILLUSTRATION 5: Spring, egg sac opening -->
+  <div class="illus-wrap">
+    <div>
+      <svg width="400" height="210" viewBox="0 0 400 210" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="ink5"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0.9"/></filter></defs>
+        <!-- Branch -->
+        <g filter="url(#ink5)" stroke="#2B2520" fill="none">
+          <path d="M0 120 Q60 108 120 115 Q180 122 240 110 Q300 98 380 105" stroke-width="3" opacity="0.7"/>
+          <!-- smaller branch -->
+          <path d="M140 115 Q160 90 175 70" stroke-width="1.8" opacity="0.5"/>
+          <path d="M200 112 Q220 85 228 60" stroke-width="1.6" opacity="0.5"/>
+          <!-- Spring buds/leaves -->
+          <ellipse cx="175" cy="68" rx="8" ry="12" stroke-width="1.2" opacity="0.5"/>
+          <ellipse cx="228" cy="58" rx="7" ry="11" stroke-width="1.2" opacity="0.5"/>
+          <ellipse cx="155" cy="85" rx="6" ry="9" stroke-width="1" opacity="0.4"/>
+          <ellipse cx="310" cy="100" rx="7" ry="10" stroke-width="1" opacity="0.4"/>
+          <ellipse cx="350" cy="102" rx="5" ry="8" stroke-width="1" opacity="0.4"/>
+        </g>
+        <!-- Egg sac hanging from branch -->
+        <g filter="url(#ink5)" stroke="#2B2520" fill="none">
+          <line x1="200" y1="110" x2="200" y2="130" stroke-width="1"/>
+          <!-- sac — papery oval -->
+          <ellipse cx="200" cy="148" rx="18" ry="22" stroke-width="1.6" opacity="0.7"/>
+          <!-- texture lines on sac -->
+          <path d="M184 142 Q200 138 216 142" stroke-width="0.7" opacity="0.4"/>
+          <path d="M182 148 Q200 144 218 148" stroke-width="0.7" opacity="0.4"/>
+          <path d="M184 154 Q200 150 216 154" stroke-width="0.7" opacity="0.4"/>
+          <!-- opening at top -->
+          <path d="M192 128 Q200 125 208 128" stroke-width="1.2" opacity="0.6"/>
+        </g>
+        <!-- Baby spiders floating away on silk -->
+        <g filter="url(#ink5)" stroke="#2B2520" fill="none" opacity="0.6">
+          <!-- spider 1 -->
+          <line x1="200" y1="126" x2="155" y2="60" stroke-width="0.5"/>
+          <ellipse cx="154" cy="56" rx="3" ry="4" stroke-width="0.9"/>
+          <ellipse cx="154" cy="52" rx="2" ry="2" stroke-width="0.8"/>
+          <line x1="152" y1="52" x2="148" y2="49"/><line x1="156" y1="52" x2="160" y2="49"/>
+          <line x1="151" y1="54" x2="147" y2="53"/><line x1="157" y1="54" x2="161" y2="53"/>
+          <line x1="151" y1="57" x2="147" y2="59"/><line x1="157" y1="57" x2="161" y2="59"/>
+          <line x1="152" y1="59" x2="149" y2="62"/><line x1="156" y1="59" x2="159" y2="62"/>
+          <!-- spider 2 -->
+          <line x1="200" y1="126" x2="258" y2="45" stroke-width="0.5"/>
+          <ellipse cx="259" cy="41" rx="3" ry="4" stroke-width="0.9"/>
+          <ellipse cx="259" cy="37" rx="2" ry="2" stroke-width="0.8"/>
+          <line x1="257" y1="37" x2="253" y2="34"/><line x1="261" y1="37" x2="265" y2="34"/>
+          <line x1="256" y1="39" x2="252" y2="38"/><line x1="262" y1="39" x2="266" y2="38"/>
+          <line x1="256" y1="42" x2="252" y2="44"/><line x1="262" y1="42" x2="266" y2="44"/>
+          <line x1="257" y1="44" x2="254" y2="47"/><line x1="261" y1="44" x2="264" y2="47"/>
+          <!-- spider 3 — tiny, high up -->
+          <line x1="200" y1="126" x2="120" y2="25" stroke-width="0.4"/>
+          <ellipse cx="119" cy="21" rx="2.5" ry="3" stroke-width="0.8"/>
+          <line x1="117" y1="21" x2="113" y2="18"/><line x1="121" y1="21" x2="125" y2="18"/>
+          <line x1="116" y1="23" x2="112" y2="22"/><line x1="122" y1="23" x2="126" y2="22"/>
+          <line x1="116" y1="25" x2="112" y2="27"/><line x1="122" y1="25" x2="126" y2="27"/>
+          <!-- spider 4 — going right -->
+          <line x1="200" y1="126" x2="310" y2="30" stroke-width="0.4"/>
+          <ellipse cx="311" cy="26" rx="2.5" ry="3" stroke-width="0.8"/>
+          <line x1="309" y1="26" x2="305" y2="23"/><line x1="313" y1="26" x2="317" y2="23"/>
+          <line x1="308" y1="28" x2="304" y2="27"/><line x1="314" y1="28" x2="318" y2="27"/>
+          <line x1="308" y1="30" x2="304" y2="32"/><line x1="314" y1="30" x2="318" y2="32"/>
+        </g>
+        <!-- Wilbur below, watching, small -->
+        <g filter="url(#ink5)" stroke="#2B2520" fill="none" opacity="0.65">
+          <ellipse cx="200" cy="195" rx="20" ry="12"/>
+          <ellipse cx="218" cy="192" rx="9" ry="8"/>
+          <ellipse cx="226" cy="192" rx="4" ry="3"/>
+          <circle cx="221" cy="189" r="1.3" fill="#2B2520"/>
+          <path d="M181 193 Q178 190 182 187 Q186 183 188 188" stroke-width="1"/>
+          <!-- wilbur looking up -->
+          <line x1="215" y1="184" x2="214" y2="178"/>
+        </g>
+      </svg>
+      <div class="illus-caption">Spring — the egg sac opens, the spiders scatter on the wind; Wilbur watches from below</div>
+    </div>
   </div>
 
-  <div class="card red">
-    <h3>What Your Presentation Should Cover</h3>
-    <ul>
-      <li><strong>The story</strong> — what happens? Don't tell every detail. Choose the most important moments.</li>
-      <li><strong>The characters</strong> — who matters most, and why?</li>
-      <li><strong>At least two themes</strong> — what big ideas does the book explore?</li>
-      <li><strong>Your opinion</strong> — what did the book make you feel? What will you remember?</li>
-    </ul>
+  <!-- 5.2 DENSE — Charlotte's death sorting (FIXED: interpretive positions, not facts) -->
+  <div class="surface dense" data-interactive>
+    <div class="entry-prompt">Charlotte dies alone at the county fairground. E.B. White doesn't soften it.</div>
+    <div class="entry-note">Below are different ways of reading her death. Sort them: which feel like reasons it is a tragedy, and which feel like reasons it is not? You can put everything in one column — and you should argue about the ones that could go either way.</div>
+    <div class="drag-bank" id="bank-5-2"></div>
+    <div class="group-grid">
+      <div class="group-bin" data-bin-key="a">
+        <div class="group-bin-label">This makes her death feel like a tragedy —</div>
+        <div class="bin-items" id="bin-5a"></div>
+      </div>
+      <div class="group-bin" data-bin-key="b">
+        <div class="group-bin-label">This makes her death feel less like a tragedy —</div>
+        <div class="bin-items" id="bin-5b"></div>
+      </div>
+    </div>
+    <div style="margin-top:0.6rem;">
+      <div class="entry-prompt" style="font-size:0.97rem;">Which one was hardest to place? Why?</div>
+      <textarea class="thinking-area" id="t5-2" style="min-height:80px;" placeholder="The hard ones are the interesting ones." oninput="wc(this,'wc5-2')"></textarea>
+      <div class="word-count" id="wc5-2"></div>
+    </div>
   </div>
 
-  <div class="card straw">
-    <h3>A Structure That Works</h3>
-    <ul>
-      <li><strong>Open with a hook</strong> — a question, a quote, or a surprising fact</li>
-      <li><strong>Tell the story briefly</strong> — two to three minutes maximum</li>
-      <li><strong>Go deeper on themes</strong> — pick the ones that interest you most</li>
-      <li><strong>End with your own voice</strong> — what does the book mean to you?</li>
-    </ul>
+  <!-- 5.3 DENSE — last line word marking -->
+  <div class="surface dense" data-interactive>
+    <div class="entry-prompt">The very last sentence of the novel.</div>
+    <div class="entry-note">Mark the words that carry something — importance, surprise, or a question you want to sit with.</div>
+    <div class="word-cloud" id="wcloud-5-3" data-mark="wc53">
+      <div class="w-item" onclick="markCycle(this,'wc53')">It</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">is</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">not</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">often</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">that</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">someone</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">comes</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">along</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">who</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">is</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">a</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">true</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">friend</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">and</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">a</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">good</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">writer.</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">Charlotte</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">was</div>
+      <div class="w-item" onclick="markCycle(this,'wc53')">both.</div>
+    </div>
+    <div class="mark-legend">
+      <div class="mark-legend-item"><div class="mark-dot" style="background:var(--ochre);"></div>Feels important</div>
+      <div class="mark-legend-item"><div class="mark-dot" style="background:var(--sage);"></div>Surprises me</div>
+      <div class="mark-legend-item"><div class="mark-dot" style="background:var(--denim);"></div>I want to think about this</div>
+    </div>
+    <div style="margin-top:1.1rem;">
+      <div class="entry-prompt" style="font-size:0.97rem;">Why does White put "a good writer" in that sentence? What does being a writer have to do with friendship?</div>
+      <textarea class="thinking-area" id="t5-3" style="min-height:80px;" placeholder="One thought. Or one word you marked, and why." oninput="wc(this,'wc5-3')"></textarea>
+      <div class="word-count" id="wc5-3"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════ ZONE 6 ═══════════════════════════ -->
+<div id="z6" class="zone">
+  <div class="zone-title">What Stays With Us</div>
+  <div class="zone-subtitle">Late reading · Zone Six</div>
+  <div class="zone-teacher-note">Closing zone. Slow the pace. Sentence stems work well as a quiet individual activity. The word collage makes a good whole-class ending — project it and build it together.</div>
+
+  <!-- Still point -->
+  <div class="still-point">
+    <div class="sp-quote">"After all, what's a life, anyway? We're born, we live a little while, we die. A spider's life can't help being something of a mess, with all this trapping and eating flies. By helping you, perhaps I was trying to lift up my life a trifle."</div>
+    <div class="sp-note">Charlotte A. Cavatica</div>
   </div>
 
-  <div class="card">
-    <h3>Good Quotes to Use</h3>
-    <ul>
-      <li><em>"It is not often that someone comes along who is a true friend and a good writer. Charlotte was both."</em></li>
-      <li><em>"I'll be your friend, Wilbur. I've watched you all day and I like you."</em></li>
-      <li><em>"Why did you do all this for me? I don't deserve it. I've never done anything for you."</em><br>— Wilbur<br>
-      <em>"You have been my friend. That in itself is a tremendous thing."</em><br>— Charlotte</li>
-    </ul>
+  <!-- 6.2 OPEN — sentence stems -->
+  <div class="surface open" style="padding-block:6rem;">
+    <div style="max-width:540px;margin:0 auto;">
+      <div class="entry-prompt" style="font-size:1.08rem;margin-bottom:0.4rem;">Complete these slowly. Take the one that means something to you.</div>
+      <div class="entry-note" style="margin-bottom:1.8rem;">There is no rush. There is no wrong answer.</div>
+      <div class="stem-row"><span class="stem-fixed">The thing I keep thinking about is</span><input class="stem-input" placeholder="—"></div>
+      <div class="stem-row"><span class="stem-fixed">Before this story, I thought friendship was</span><input class="stem-input" placeholder="—"></div>
+      <div class="stem-row"><span class="stem-fixed">Now I think it might be</span><input class="stem-input" placeholder="—"></div>
+      <div class="stem-row"><span class="stem-fixed">The character I understood least was</span><input class="stem-input" placeholder="—"></div>
+      <div class="stem-row"><span class="stem-fixed">The character I want to know more about is</span><input class="stem-input" placeholder="—"></div>
+      <div class="stem-row"><span class="stem-fixed">Charlotte wove her web for Wilbur, but I think she also</span><input class="stem-input" placeholder="—"></div>
+      <div class="stem-row"><span class="stem-fixed">Because of this story, I</span><input class="stem-input" placeholder="—"></div>
+    </div>
   </div>
 
-  <div class="card">
-    <h3>Tips for a Strong Presentation</h3>
-    <ul>
-      <li>Don't read from a script — use short notes, not full sentences</li>
-      <li>Speak slowly and clearly — you know this story, they don't</li>
-      <li>Use Garth Williams' illustrations if you can — they help your audience picture the world</li>
-      <li>It's fine to say what you found difficult or sad in the book — honesty makes presentations interesting</li>
-      <li>Practise at least once before you present</li>
-    </ul>
+  <!-- 6.3 REFLECTIVE -->
+  <div class="surface reflective" data-interactive>
+    <div class="entry-prompt">Wilbur carries Charlotte's memory for the rest of his life. He loves her daughters — but he never confuses them with her. Nobody can take her place, and he doesn't try to make them.</div>
+    <div class="entry-note">This is what the novel finally says about grief: you carry it alongside everything else.</div>
+    <div class="surface-rule" style="max-width:540px;margin:0 auto;"></div>
+    <div class="entry-prompt" style="font-size:1.05rem;">Write a longer thought here — anything this story left with you.</div>
+    <textarea class="thinking-area" id="t6-3" style="min-height:160px;" placeholder="This is yours. No one needs to read it." oninput="wc(this,'wc6-3')"></textarea>
+    <div class="word-count" id="wc6-3"></div>
   </div>
 
-  <div class="pres-task" style="background:var(--meadow);">
-    <h3>One Final Thought</h3>
-    <p>Charlotte spends the whole novel writing about Wilbur. She uses her skill with words to change how the world sees him. When you do your presentation, you're doing something similar — using <em>your</em> words to help others see a story they haven't experienced yet. That is a real skill. Take it seriously.</p>
+  <!-- 6.4 Collage -->
+  <div class="collage-zone">
+    <div class="entry-prompt" style="font-size:1.05rem;text-align:center;margin-bottom:0.5rem;">Words from the story that you want to keep.</div>
+    <div class="entry-note" style="text-align:center;margin-bottom:1rem;">Type a word and press return to add it. Click a word to remove it.</div>
+    <div class="collage-wall" id="collage-6-4"></div>
+    <div class="collage-add-row">
+      <input class="collage-input" id="collage-input" placeholder="Write a word and press return —" onkeydown="if(event.key==='Enter')addTag()">
+    </div>
   </div>
-</section>
+
+  <!-- Final close -->
+  <div class="surface reflective" style="margin-top:2rem;">
+    <div class="entry-prompt" style="font-size:1.55rem;margin-bottom:0.6rem;">We lived inside this story.</div>
+    <div class="entry-note">That is enough.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ZONE 7 ═══════════════════════════ -->
+<div id="z7" class="zone">
+  <div class="zone-title">Your Presentation</div>
+  <div class="zone-subtitle">Preparation · Zone Seven</div>
+  <div class="zone-teacher-note">One lesson to prepare. Students work through the four steps below, then use the reminder card at the bottom as their speaking notes. The card can also be printed — printing this page will show only the reminder card.</div>
+
+  <!-- STEP 1: Pick your angle -->
+  <div class="pres-step">
+    <div class="surface dense" data-interactive>
+      <div class="pres-step-label">Step 1 of 4</div>
+      <div class="pres-step-heading">Choose what you actually want to tell your class.</div>
+      <div class="pres-step-note">A plot summary is the least interesting thing you can do. Your class will understand more if you give them one idea to think about. Pick the angle that feels most true to you — or write your own.</div>
+      <div class="angle-grid" id="angle-grid">
+        <div class="angle-card" onclick="pickAngle(this,'friendship')">
+          <div class="angle-card-label">Friendship</div>
+          <p>A story about what it costs to be a true friend — and what it's worth.</p>
+        </div>
+        <div class="angle-card" onclick="pickAngle(this,'language')">
+          <div class="angle-card-label">Language</div>
+          <p>A story about the power of words — and how they can change the way people see the world.</p>
+        </div>
+        <div class="angle-card" onclick="pickAngle(this,'death')">
+          <div class="angle-card-label">Death &amp; legacy</div>
+          <p>A story about what a life means — and what we leave behind when it ends.</p>
+        </div>
+        <div class="angle-card" onclick="pickAngle(this,'fairness')">
+          <div class="angle-card-label">Fairness</div>
+          <p>A story that asks whether all lives have equal value — and who gets to decide.</p>
+        </div>
+      </div>
+      <div class="entry-note" style="margin-bottom:0.5rem;">Or write your own angle in one sentence:</div>
+      <textarea class="thinking-area" id="t7-angle" style="min-height:60px;" placeholder="This book is really about…" oninput="wc(this,'wc7-angle');updateCard()"></textarea>
+      <div class="word-count" id="wc7-angle"></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Open strong -->
+  <div class="pres-step">
+    <div class="surface dense" data-interactive>
+      <div class="pres-step-label">Step 2 of 4</div>
+      <div class="pres-step-heading">Open with something that makes them want to listen.</div>
+      <div class="pres-step-note">Don't start with "So the book is called…". Start with something that creates a question in their minds. Pick a starter below — or ignore them and write your own.</div>
+      <div class="starter-grid" id="starters-open">
+        <div class="starter-chip" onclick="pickStarter(this,'open')">What would you do if someone told you that a friend was going to die — and only you could save them?</div>
+        <div class="starter-chip" onclick="pickStarter(this,'open')">Imagine waking up one morning and finding two words written in a spider's web above your garden.</div>
+        <div class="starter-chip" onclick="pickStarter(this,'open')">Can words change the world — without changing anything about the thing they describe?</div>
+        <div class="starter-chip" onclick="pickStarter(this,'open')">If you were going to be killed, and a spider offered to save your life — what would you think she wanted in return?</div>
+      </div>
+      <div class="entry-note" style="margin-bottom:0.5rem;">Your opening (write your own, or adapt one above):</div>
+      <textarea class="thinking-area" id="t7-open" style="min-height:80px;" placeholder="Write your first sentence or two here." oninput="wc(this,'wc7-open');updateCard()"></textarea>
+      <div class="word-count" id="wc7-open"></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: The story in 2 minutes -->
+  <div class="pres-step">
+    <div class="surface dense" data-interactive>
+      <div class="pres-step-label">Step 3 of 4</div>
+      <div class="pres-step-heading">Tell the story — but only the parts that matter for your angle.</div>
+      <div class="pres-step-note">You have about two minutes. That means four or five sentences — not a chapter-by-chapter summary. Think of it as a trailer, not a retelling. What do they need to know to understand your main idea?</div>
+      <div class="entry-note" style="margin-bottom:0.4rem;">A few useful phrases — click one to add it to your notes:</div>
+      <div class="starter-grid" style="margin-bottom:1rem;">
+        <div class="starter-chip" onclick="pickStarter(this,'story')">The story begins when…</div>
+        <div class="starter-chip" onclick="pickStarter(this,'story')">The key moment is when…</div>
+        <div class="starter-chip" onclick="pickStarter(this,'story')">The part that surprised me most was…</div>
+        <div class="starter-chip" onclick="pickStarter(this,'story')">By the end of the book…</div>
+      </div>
+      <div class="entry-note" style="margin-bottom:0.5rem;">Your story summary (notes only — not a script):</div>
+      <textarea class="thinking-area" id="t7-story" style="min-height:110px;" placeholder="Four or five bullet points or sentences. Don't try to tell everything." oninput="wc(this,'wc7-story');updateCard()"></textarea>
+      <div class="word-count" id="wc7-story"></div>
+    </div>
+  </div>
+
+  <!-- STEP 4: The one big idea -->
+  <div class="pres-step">
+    <div class="surface dense" data-interactive>
+      <div class="pres-step-label">Step 4 of 4</div>
+      <div class="pres-step-heading">Land on the one thing you want them to think about.</div>
+      <div class="pres-step-note">This is the part your class will actually remember. It doesn't have to be complicated. It could be a question, a quote from the book, or the moment that stayed with you longest. End there — don't trail off.</div>
+      <div class="starter-grid" id="starters-close">
+        <div class="starter-chip" onclick="pickStarter(this,'close')">The line I keep thinking about is: "You have been my friend. That in itself is a tremendous thing."</div>
+        <div class="starter-chip" onclick="pickStarter(this,'close')">What the book made me ask is: what would you be willing to give up for a friend?</div>
+        <div class="starter-chip" onclick="pickStarter(this,'close')">The moment I won't forget is when Charlotte dies alone at the fairground — and the story doesn't look away.</div>
+        <div class="starter-chip" onclick="pickStarter(this,'close')">E.B. White ends with: "It is not often that someone comes along who is a true friend and a good writer. Charlotte was both."</div>
+      </div>
+      <div class="entry-note" style="margin-bottom:0.5rem;">Your closing (your own words, or adapt one above):</div>
+      <textarea class="thinking-area" id="t7-close" style="min-height:80px;" placeholder="What's the last thing you want them to hear?" oninput="wc(this,'wc7-close');updateCard()"></textarea>
+      <div class="word-count" id="wc7-close"></div>
+    </div>
+  </div>
+
+  <!-- REMINDER CARD -->
+  <div class="reminder-card" id="reminder-card">
+    <div class="reminder-card-title">Your presentation — speaking notes</div>
+
+    <div class="reminder-row">
+      <div class="reminder-num">1</div>
+      <div class="reminder-body">
+        <div class="reminder-label">Open with</div>
+        <div class="reminder-text" id="rc-open"><em style="opacity:0.45;">Complete Step 2 above to fill this in.</em></div>
+      </div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-num">2</div>
+      <div class="reminder-body">
+        <div class="reminder-label">Your angle — what this book is really about</div>
+        <div class="reminder-text" id="rc-angle"><em style="opacity:0.45;">Complete Step 1 above to fill this in.</em></div>
+        <div class="reminder-preview">Say this before the summary — it tells your audience what to listen for.</div>
+      </div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-num">3</div>
+      <div class="reminder-body">
+        <div class="reminder-label">The story</div>
+        <div class="reminder-text" id="rc-story"><em style="opacity:0.45;">Complete Step 3 above to fill this in.</em></div>
+        <div class="reminder-preview">Two minutes. Notes only — don't read it out.</div>
+      </div>
+    </div>
+
+    <div class="reminder-row">
+      <div class="reminder-num">4</div>
+      <div class="reminder-body">
+        <div class="reminder-label">Close with</div>
+        <div class="reminder-text" id="rc-close"><em style="opacity:0.45;">Complete Step 4 above to fill this in.</em></div>
+      </div>
+    </div>
+
+    <div class="reminder-row" style="background:rgba(184,118,58,0.06);border-radius:4px;padding:0.8rem 1rem;border:none;margin-top:0.6rem;">
+      <div class="reminder-body" style="width:100%;">
+        <div class="reminder-label" style="margin-bottom:0.5rem;">Checklist</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.3rem 1.5rem;">
+          <div style="font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-mid);">☐ &nbsp;Don't read from a script</div>
+          <div style="font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-mid);">☐ &nbsp;Speak to the room, not your notes</div>
+          <div style="font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-mid);">☐ &nbsp;Your class hasn't read it — keep it clear</div>
+          <div style="font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-mid);">☐ &nbsp;Practise once before you present</div>
+          <div style="font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-mid);">☐ &nbsp;End on your closing line — don't trail off</div>
+          <div style="font-family:'Source Sans 3',sans-serif;font-size:0.8rem;color:var(--ink-mid);">☐ &nbsp;Three to four minutes is enough</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">Print this card</button>
+  </div>
+
+</div><!-- /z7 -->
 
 </main>
 
+<footer>
+  <span>Charlotte's Web · E.B. White · 1952</span>
+  <span>A literary thinking environment</span>
+</footer>
+
 <script>
-// NAV
-const sectionOrder = ['overview','part1','part2','part3','themes','characters','quiz','discussion','match','presentation'];
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  const idx = sectionOrder.indexOf(id);
-  if (idx >= 0) document.querySelectorAll('nav button')[idx].classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
+const S = {
+  zone:"z1", groupings:{}, rankings:{}, markings:{}, reflections:{}, spectrum:{},
+  characterOpen:null,
+  collage:["friendship","humble","terrific","radiant","web","grief","legacy","belonging","loyalty","spider","barn","fair","ordinary","some pig"]
+};
+
+const ENGINE = {
+  vectors:{emotional:30,analytical:25,symbolic:35,imaginative:40,engagement:50},
+  zoneMemory:[], cueCooldown:0, lastInteraction:Date.now()
+};
+function ENGINE_track(){
+  const now=Date.now();
+  if(now-ENGINE.lastInteraction>60000) ENGINE.vectors.engagement-=4;
+  else ENGINE.vectors.engagement+=1;
+  ENGINE.lastInteraction=now;
+}
+function ENGINE_imag(text){
+  if(!text)return 0;
+  let s=0;
+  if(/like|as if|felt|seems|maybe|strange|almost/i.test(text))s+=5;
+  if(/because|but|however|although/i.test(text))s+=2;
+  if(/lonely|afraid|quiet|sad|curious|death|life|friend/i.test(text))s+=3;
+  return s;
+}
+function ENGINE_write(text){
+  const n=text.trim().split(/\s+/).length, im=ENGINE_imag(text);
+  ENGINE.vectors.imaginative=Math.min(100,ENGINE.vectors.imaginative+im);
+  ENGINE.vectors.symbolic=Math.min(100,ENGINE.vectors.symbolic+im*0.6);
+  ENGINE.vectors.emotional=Math.min(100,ENGINE.vectors.emotional+(n>15&&im>0?2:0));
+  ENGINE.vectors.analytical=Math.min(100,ENGINE.vectors.analytical+(n>40?3:0));
+}
+function ENGINE_cue(zone){
+  if(ENGINE.cueCooldown>0){ENGINE.cueCooldown--;return;}
+  let t="";
+  if(zone==="z4"&&ENGINE.vectors.symbolic>45)t=["That is a curious way of seeing it.","There may be more inside that thought.","That feels worth noticing."][Math.floor(Math.random()*3)];
+  else if(ENGINE.vectors.imaginative>55)t="Something interesting is beginning here.";
+  else if(zone==="z6")t="Let this stay unfinished.";
+  if(!t)return;
+  let el=document.getElementById("dcue");
+  if(!el){el=document.createElement("div");el.id="dcue";el.style.cssText="position:fixed;bottom:22px;left:50%;transform:translateX(-50%);font-family:'Crimson Text',serif;font-style:italic;color:rgba(43,37,32,0.6);opacity:0;transition:opacity 2s ease;pointer-events:none;z-index:9999;font-size:1rem;";document.body.appendChild(el);}
+  el.textContent=t;el.style.opacity="1";setTimeout(()=>el.style.opacity="0",5200);
+  ENGINE.cueCooldown=3;
 }
 
-// CHAPTER ACCORDION
-function toggleChapter(head) {
-  const body = head.nextElementSibling;
-  const arrow = head.querySelector('.ch-arrow');
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+/* GROUPING DATA */
+const G1_WORDS = [
+  "applying the same rule to everyone",
+  "the weak deserve protection",
+  "she can't argue with logic she created",
+  "she loves him and can't bear it",
+  "it feels wrong before she can explain why",
+  "she acts before she thinks",
+  "fairness requires consistency",
+  "some things don't need a reason"
+];
+const G5_WORDS = [
+  "she died alone — no one was with her",
+  "she got to see her plan succeed",
+  "she never made it home to the barn",
+  "she knew it was coming and kept working anyway",
+  "her plan worked completely",
+  "she left 514 lives behind her",
+  "Wilbur will grieve her his whole life",
+  "she chose how to spend what she had left"
+];
+const RANK_MOMENTS = {
+  "charlotte-promise":"Charlotte says 'I am going to save your life' — before she has any plan",
+  "fern-field":       "Fern faces her father in the field before sunrise",
+  "some-pig":         "The first morning Mr Zuckerman finds SOME PIG in the web",
+  "charlotte-why":    "Charlotte tells Wilbur: 'You have been my friend. That in itself is a tremendous thing.'",
+  "death-fair":       "Charlotte dies alone at the county fairground",
+  "egg-sac-spring":   "The egg sac opens in spring and the spiders scatter on the wind"
+};
+const RANK_CHANGES = {
+  "wilbur-value":  "How the Zuckermans see Wilbur's value",
+  "fern-grows":    "How connected Fern is to the barn",
+  "wilbur-fear":   "Wilbur's relationship with the fact that he will die someday",
+  "words-matter":  "What Wilbur understands about what words can do",
+  "charlotte-life":"What Charlotte feels her own life has been worth"
+};
+
+function init(){
+  S.groupings.g1=Object.fromEntries(G1_WORDS.map(w=>[w,"bank"]));
+  S.groupings.g5=Object.fromEntries(G5_WORDS.map(w=>[w,"bank"]));
+  renderGroup("g1","bank-1-2","bin-1a","bin-1b");
+  renderGroup("g5","bank-5-2","bin-5a","bin-5b");
+  S.rankings["rank-moments"]=Object.keys(RANK_MOMENTS);
+  S.rankings["rank-changes"]=Object.keys(RANK_CHANGES);
+  renderRank("rank-moments",RANK_MOMENTS);
+  renderRank("rank-changes",RANK_CHANGES);
+  S.markings.wc22={};S.markings.wc53={};
+  renderCollage();
+  setSpectrum("s43",25);
 }
 
-// QUIZ
-function checkAnswer(btn, result) {
-  const block = btn.closest('.quiz-block');
-  if (block.dataset.answered) return;
-  block.dataset.answered = '1';
-  const options = block.querySelectorAll('.q-option');
-  const feedback = block.querySelector('.q-feedback');
-  options.forEach(o => o.classList.add('locked'));
-  btn.classList.add(result);
-  feedback.classList.add('show', result);
-  if (result === 'wrong') {
-    options.forEach(o => {
-      if (o.getAttribute('onclick') && o.getAttribute('onclick').includes("'correct'")) {
-        o.classList.add('correct');
-      }
-    });
-  }
+const ZONE_ORDER=['z1','z2','z3','z4','z5','z6','z7'];
+function setZone(id){
+  S.zone=id;
+  document.querySelectorAll(".zone").forEach(z=>z.classList.remove("active","entering"));
+  document.querySelectorAll(".zone-btn").forEach(b=>b.classList.remove("active"));
+  const z=document.getElementById(id);z.classList.add("active");
+  const idx=ZONE_ORDER.indexOf(id);
+  if(idx>=0)document.querySelectorAll(".zone-btn")[idx].classList.add("active");
+  requestAnimationFrame(()=>requestAnimationFrame(()=>z.classList.add("entering")));
+  ENGINE.zoneMemory.push(id);ENGINE_cue(id);
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-// DRAG AND DROP
-let draggedEl = null;
-let sourceParent = null;
+function wc(el,id){
+  const text=el.value.trim(),n=text?text.split(/\s+/).length:0;
+  const out=document.getElementById(id);
+  if(out)out.textContent=n?`${n} word${n!==1?"s":""}` :"";
+  if(el.id)S.reflections[el.id]=el.value;
+  ENGINE_track();ENGINE_write(text);
+}
 
-document.addEventListener('dragstart', e => {
-  if (!e.target.classList.contains('draggable')) return;
-  draggedEl = e.target;
-  sourceParent = e.target.parentElement;
-  draggedEl.classList.add('dragging');
-});
-
-document.addEventListener('dragend', () => {
-  if (draggedEl) draggedEl.classList.remove('dragging');
-  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('drag-over'));
-  draggedEl = null;
-});
-
-document.addEventListener('dragover', e => {
-  const zone = e.target.closest('.drop-zone');
-  if (!zone) return;
-  e.preventDefault();
-  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('drag-over'));
-  zone.classList.add('drag-over');
-});
-
-document.addEventListener('drop', e => {
-  const zone = e.target.closest('.drop-zone');
-  if (!zone || !draggedEl) return;
-  e.preventDefault();
-  zone.classList.remove('drag-over');
-  zone.classList.remove('matched-correct','matched-wrong');
-
-  // If zone already has an item, return it to source col
-  const existing = zone.querySelector('.draggable');
-  if (existing) {
-    if (sourceParent) sourceParent.appendChild(existing);
-  }
-
-  zone.appendChild(draggedEl);
-
-  // Remove label text visibility (it stays in DOM but hidden by flex layout)
-  const label = zone.querySelector('.zone-label');
-  if (label) label.style.display = 'none';
-});
-
-function checkMatch(containerId) {
-  const container = document.getElementById(containerId);
-  const zones = container.querySelectorAll('.drop-zone');
-  let correct = 0;
-  zones.forEach(zone => {
-    zone.classList.remove('matched-correct','matched-wrong');
-    const item = zone.querySelector('.draggable');
-    if (item) {
-      const ok = item.dataset.value === zone.dataset.answer;
-      zone.classList.add(ok ? 'matched-correct' : 'matched-wrong');
-      if (ok) correct++;
-    }
+/* GROUPING — cycle: bank → a → b → bank */
+function tokenCycle(el,surface){
+  const word=el.textContent.trim();
+  const cur=S.groupings[surface]?.[word]||"bank";
+  const next=cur==="bank"?"a":cur==="a"?"b":"bank";
+  if(!S.groupings[surface])S.groupings[surface]={};
+  S.groupings[surface][word]=next;
+  const map={g1:["bank-1-2","bin-1a","bin-1b"],g5:["bank-5-2","bin-5a","bin-5b"]};
+  renderGroup(surface,...map[surface]);
+}
+function renderGroup(surface,bankId,binAId,binBId){
+  const bank=document.getElementById(bankId);
+  const binA=document.getElementById(binAId);
+  const binB=document.getElementById(binBId);
+  if(!bank||!binA||!binB)return;
+  bank.innerHTML="";binA.innerHTML="";binB.innerHTML="";
+  Object.entries(S.groupings[surface]).forEach(([word,loc])=>{
+    const el=document.createElement("div");
+    el.className="drag-token"+(loc==="a"?" in-a":loc==="b"?" in-b":"");
+    el.textContent=word;
+    el.onclick=()=>tokenCycle(el,surface);
+    if(loc==="bank")bank.appendChild(el);
+    else if(loc==="a")binA.appendChild(el);
+    else binB.appendChild(el);
   });
-  const result = document.getElementById(containerId + '-result');
-  if (correct === zones.length) {
-    result.textContent = '✦ Perfect — all correct!';
-    result.style.color = 'var(--meadow)';
-  } else {
-    result.textContent = correct + ' out of ' + zones.length + ' correct. The red ones need another look.';
-    result.style.color = 'var(--barn)';
-  }
 }
 
-function resetMatch(containerId, sourceId) {
-  const container = document.getElementById(containerId);
-  const sourceCol = document.getElementById(sourceId);
-  const zones = container.querySelectorAll('.drop-zone');
-  zones.forEach(zone => {
-    zone.classList.remove('matched-correct','matched-wrong','drag-over');
-    const item = zone.querySelector('.draggable');
-    if (item) sourceCol.appendChild(item);
-    const label = zone.querySelector('.zone-label');
-    if (label) label.style.display = '';
-  });
-  const result = document.getElementById(containerId + '-result');
-  if (result) result.textContent = '';
+/* RANKING */
+let rankSel=null;
+function rankTap(key,listId){
+  if(!rankSel){
+    rankSel=key;
+    document.querySelectorAll(`#${listId} .rank-item`).forEach(el=>el.classList.toggle("selected",el.dataset.key===key));
+    return;
+  }
+  if(rankSel===key){rankSel=null;document.querySelectorAll(".rank-item").forEach(el=>el.classList.remove("selected"));return;}
+  const arr=S.rankings[listId];
+  const ai=arr.indexOf(rankSel),bi=arr.indexOf(key);
+  [arr[ai],arr[bi]]=[arr[bi],arr[ai]];
+  rankSel=null;
+  renderRank(listId,listId==="rank-moments"?RANK_MOMENTS:RANK_CHANGES);
 }
+function renderRank(listId,labels){
+  const ul=document.getElementById(listId);if(!ul)return;
+  ul.innerHTML="";
+  S.rankings[listId].forEach((key,i)=>{
+    const li=document.createElement("li");
+    li.className="rank-item";li.dataset.key=key;
+    li.onclick=()=>rankTap(key,listId);
+    li.innerHTML=`<span class="rank-num">${i+1}</span><span class="rank-handle">&#10815;</span>${labels[key]||key}`;
+    ul.appendChild(li);
+  });
+}
+
+/* WORD MARKING */
+const markOrder=["none","a","b","c"];
+function markCycle(el,surface){
+  const word=el.textContent.trim();
+  if(!S.markings[surface])S.markings[surface]={};
+  const cur=S.markings[surface][word]||"none";
+  S.markings[surface][word]=markOrder[(markOrder.indexOf(cur)+1)%markOrder.length];
+  renderMarks(surface);
+}
+function renderMarks(surface){
+  document.querySelectorAll(`[data-mark="${surface}"] .w-item`).forEach(el=>{
+    const w=el.textContent.trim();
+    el.classList.remove("mark-a","mark-b","mark-c");
+    const m=S.markings[surface]?.[w];
+    if(m==="a")el.classList.add("mark-a");
+    else if(m==="b")el.classList.add("mark-b");
+    else if(m==="c")el.classList.add("mark-c");
+  });
+}
+
+/* CHARACTER */
+function charToggle(id){
+  S.characterOpen=S.characterOpen===id?null:id;
+  document.querySelectorAll(".char-expand").forEach(e=>e.classList.remove("open"));
+  document.querySelectorAll(".char-node").forEach(n=>n.classList.remove("selected"));
+  if(!S.characterOpen)return;
+  const expand=document.getElementById(S.characterOpen);
+  const node=document.querySelector(`[data-char="${S.characterOpen}"]`);
+  if(expand)expand.classList.add("open");
+  if(node)node.classList.add("selected");
+  if(expand)expand.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+/* SPECTRUM */
+function setSpectrum(id,val){
+  S.spectrum[id]=Number(val);
+  const label=document.getElementById(`spec-label-${id}`);if(!label)return;
+  const v=Number(val);
+  label.textContent=v<15?"entirely one-sided":v<35?"mostly one-sided":v<50?"leaning one-sided":v<65?"hard to say":v<85?"more balanced than it looks":"perfectly balanced";
+}
+
+/* COLLAGE */
+function addTag(){
+  const input=document.getElementById("collage-input");
+  const val=input.value.trim();if(!val)return;
+  if(!S.collage.includes(val))S.collage.push(val);
+  input.value="";renderCollage();
+}
+function removeTag(el){
+  S.collage=S.collage.filter(w=>w!==el.textContent.trim());renderCollage();
+}
+function renderCollage(){
+  const wall=document.getElementById("collage-6-4");if(!wall)return;
+  wall.innerHTML="";
+  S.collage.forEach(w=>{
+    const el=document.createElement("div");el.className="c-tag";el.textContent=w;
+    el.onclick=()=>removeTag(el);wall.appendChild(el);
+  });
+}
+
+/* ZONE 7 — PRESENTATION */
+const Z7 = { angle:'', angleText:'', openText:'', storyText:'', closeText:'' };
+
+function pickAngle(card, key){
+  document.querySelectorAll('.angle-card').forEach(c=>c.classList.remove('chosen'));
+  card.classList.add('chosen');
+  Z7.angle = key;
+  Z7.angleText = card.querySelector('p').textContent.trim();
+  updateCard();
+}
+
+function pickStarter(chip, slot){
+  const grid = chip.closest('.starter-grid');
+  grid.querySelectorAll('.starter-chip').forEach(c=>c.classList.remove('picked'));
+  chip.classList.add('picked');
+  const text = chip.textContent.trim();
+  const ta = slot === 'open'
+    ? document.getElementById('t7-open')
+    : slot === 'close'
+    ? document.getElementById('t7-close')
+    : document.getElementById('t7-story');
+  if(ta){ ta.value = text; updateCard(); ta.focus(); }
+}
+
+function updateCard(){
+  const openVal  = document.getElementById('t7-open')?.value.trim();
+  const storyVal = document.getElementById('t7-story')?.value.trim();
+  const angleVal = document.getElementById('t7-angle')?.value.trim();
+  const closeVal = document.getElementById('t7-close')?.value.trim();
+
+  const rcOpen  = document.getElementById('rc-open');
+  const rcStory = document.getElementById('rc-story');
+  const rcAngle = document.getElementById('rc-angle');
+  const rcClose = document.getElementById('rc-close');
+
+  if(rcOpen)  rcOpen.innerHTML  = openVal  ? openVal  : '<em style="opacity:0.45;">Complete Step 2 above to fill this in.</em>';
+  if(rcStory) rcStory.innerHTML = storyVal ? storyVal : '<em style="opacity:0.45;">Complete Step 3 above to fill this in.</em>';
+  if(rcAngle) rcAngle.innerHTML = (angleVal || Z7.angleText)
+    ? (angleVal || Z7.angleText)
+    : '<em style="opacity:0.45;">Complete Step 1 above to fill this in.</em>';
+  if(rcClose) rcClose.innerHTML = closeVal ? closeVal : '<em style="opacity:0.45;">Complete Step 4 above to fill this in.</em>';
+}
+
+document.addEventListener("DOMContentLoaded",init);
 </script>
 </body>
 </html>
